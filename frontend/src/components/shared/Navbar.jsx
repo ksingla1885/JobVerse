@@ -1,43 +1,86 @@
 import React from 'react'
-import { Popover , PopoverContent , PopoverTrigger } from '../ui/popover'
-import { Avatar , AvatarImage } from '../ui/avatar'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Avatar, AvatarImage } from '../ui/avatar'
+
+import { LogOut, User2 } from 'lucide-react'
+
+import "../../App.css"
+
+import { Button } from '../ui/button'
 // import { Link } from 'react-router-dom'
 
 const Navbar = () => {
+  const user = false;
+
   return (
-    <div className="bg-white">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4 h-16">
-        
+    <div className="myclass bg-white">
+      <div className="navbar">
+
         {/* Logo */}
-        <div className="text-2xl font-bold">
+        <div className="jobverse">
           Job<span className="text-[#f83002]">Verse</span>
         </div>
 
-            <div className="flex items-center gap-15">
-                {/* Navigation Links */}
-                    <ul className="flex items-center space-x-8 font-medium ml-250">
-                    <li className="hover:text-[#f83002] cursor-pointer">Home</li>
-                    <li className="hover:text-[#f83002] cursor-pointer">Jobs</li>
-                    <li className="hover:text-[#f83002] cursor-pointer">Browse</li>
-                    {/* Example with Link:
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/jobs">Jobs</Link></li>
-                    <li><Link to="/browse">Browse</Link></li>
-                    */}
-                </ul>
+        <div className="list">
+          {/* Navigation Links */}
+          <ul className="flex items-center space-x-8 font-medium">
+            <li className="hover:text-[#f83002] cursor-pointer">Home</li>
+            <li className="hover:text-[#f83002] cursor-pointer">Jobs</li>
+            <li className="hover:text-[#f83002] cursor-pointer">Browse</li>
+            {/* Example with Link:
+                      <li><Link to="/">Home</Link></li>
+                      <li><Link to="/jobs">Jobs</Link></li>
+                      <li><Link to="/browse">Browse</Link></li>
+                      */}
+          </ul>
 
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Avatar className="cursor-pointer">
-                            <AvatarImage src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-isolated-background-avatar-profile-picture-man_1293239-4841.jpg?semt=ais_hybrid&w=740"></AvatarImage>
-                        </Avatar>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                        <h1>Ketan</h1>
-                    </PopoverContent>
-                </Popover>
+          {
+            !user ? (
+              <div>
+                <Button className="login" variant="outline">Login</Button>
+                <Button className="signup ">Signup</Button>
+              </div>
+            ) : (
+              <Popover className="popover">
+                <PopoverTrigger asChild>
+                  <Avatar className="avatar cursor-pointer">
+                    <AvatarImage className="image" src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-isolated-background-avatar-profile-picture-man_1293239-4841.jpg?semt=ais_hybrid&w=740"></AvatarImage>
+                  </Avatar>
+                </PopoverTrigger>
 
-            </div>
+                <PopoverContent>
+                  <div className="flex gap-4 space-y-2">
+                    <Avatar className="cursor-pointer">
+                      <AvatarImage src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-isolated-background-avatar-profile-picture-man_1293239-4841.jpg?semt=ais_hybrid&w=740"></AvatarImage>
+                    </Avatar>
+                    <div>
+                      <h4 className="font-medium">Ketan Singla</h4>
+                      <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col text-gray-600">
+
+                    <div className="flex w-fit items-center gap-2 cursor-pointer my-2">
+                      <User2 />
+                      <Button variant="link">View Profile</Button>
+                    </div>
+                    <div className="flex w-fit items-center gap-2 cursor-pointer">
+                      <LogOut />
+                      <Button variant="link">Logout</Button>
+                    </div>
+
+                  </div>
+
+                </PopoverContent>
+
+              </Popover>
+            )
+          }
+
+
+
+        </div>
 
       </div>
     </div>
