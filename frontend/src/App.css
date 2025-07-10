@@ -23,6 +23,7 @@
 .list ul li{
   position:relative;
   left:66rem;
+  top:2rem;
 }
 
 .popover, .avatar, image{
@@ -60,3 +61,70 @@
   color:white;
 }
 
+
+
+/* "w-1/2 border-gray-200 rounded-md p-4 my-10" */
+
+.signupform{
+  width:1/2px;
+  border: gray;
+  border-radius:10%;
+  padding:4;
+  margin-top:10px;
+}
+
+/* className="font-bold text-xl mb-5" */
+.signupform h1{
+  font-weight: bold;
+  font-size: xx-large;
+  margin-bottom:30px;
+  /* background-color:black; */
+  color:#0D9488;
+  width:fit-content;
+  border:none;
+  border-radius: 10px;
+}
+
+.signupform div label{
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+.signupform div Input{
+  margin-left:10px;
+}
+/* "flex items-center justify-center max-w-7xl mx-auto" */
+.signupdiv{
+  position:absolute;
+  left:500px;
+  top:150px;
+  width:50%;
+}
+
+
+/* flex items-center gap-4 my-5 */
+.students{
+  display:flex;
+  align-items:center;
+  gap:4;
+  margin-top:15px;
+}
+
+.students Label{
+  position:relative;
+  top:3px;
+  right:5px;
+}
+
+/* flex items-center space-x-2 */
+.recruiter{
+  display:flex;
+  align-items:center;
+  gap:4;
+  margin-top:15px;
+}
+
+.recruiter Label{
+  position:relative;
+  top:3px;
+  right:10px;
+}
