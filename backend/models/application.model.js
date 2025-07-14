@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 const applicationSchema  = new mongoose.Schema({
     job:{
-        type: mongoose.Schema.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Job',
         required: true
     },
