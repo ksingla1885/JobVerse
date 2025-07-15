@@ -25,9 +25,9 @@ const Navbar = () => {
         <div className="list">
           {/* Navigation Links */}
           <ul className="flex items-center space-x-8 font-medium">
-            <li className="hover:text-[#f83002] cursor-pointer">Home</li>
-            <li className="hover:text-[#f83002] cursor-pointer">Jobs</li>
-            <li className="hover:text-[#f83002] cursor-pointer">Browse</li>
+            <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/">Home</Link> </li>
+            <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/jobs">Jobs</Link> </li>
+            <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/browse">Browse</Link> </li>
             {/* Example with Link:
                       <li><Link to="/">Home</Link></li>
                       <li><Link to="/jobs">Jobs</Link></li>
@@ -39,7 +39,7 @@ const Navbar = () => {
             !user ? (
               <div>
                 <Link to="/login"><Button className="login" variant="outline">Login</Button></Link>
-                <Link to="/signup"><Button className="signup ">Signup</Button></Link>
+                <Link to="/signup"><Button className="signup">Signup</Button></Link>
               </div>
             ) : (
               <Popover className="popover">
