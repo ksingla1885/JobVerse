@@ -14,7 +14,7 @@ const Jobs = () => {
 
             <Navbar />
 
-            <div className="max-w-7xl mx-auto mt-15">
+            <div className="w-[98vw] mx-auto mt-15">
 
                 <div className="flex gap-15">
 
