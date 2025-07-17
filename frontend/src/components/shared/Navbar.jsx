@@ -9,9 +9,10 @@ import "../../App.css"
 
 import { Button } from '../ui/button'
 // import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Navbar = () => {
-  const user = false;
+  const {user} = useSelector(store => store.auth);
 
   return (
     <div className="myclass bg-white">
