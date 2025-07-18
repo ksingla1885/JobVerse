@@ -46,7 +46,7 @@ const Job = () => {
       </div>
 
       <div className="flex items-center gap-4 mt-4 p-1">
-        <Button onClick= {() => navigate(`description/$}JobId`)}  variant="outline">Details</Button>
+        <Button onClick= {() => navigate(`/description/${JobId}`)}  variant="outline">Details</Button>
         <Button className="bg-[#7209b7]">Save for later</Button>
       </div>
     </div>
