@@ -7,13 +7,17 @@ import { Badge } from './ui/badge'
 import { Label } from './ui/label'
 import AppliedJobTable from './AppliedJobTable'
 import UpdateProfileDialog from './UpdateProfileDialog'
+import { useSelector } from 'react-redux'
 
-const skills = ["JavaScript", "React", "Node.js", "CSS", "HTML"];
+
+// const skills = ["JavaScript", "React", "Node.js", "CSS", "HTML"];
 const isResume = true;
 
 const Profile = () => {
     
     const [open, setOpen] = useState(false);
+    const { user } = useSelector(state => state.auth);
+
     return (
         <div>
             <Navbar />
@@ -27,8 +31,8 @@ const Profile = () => {
                         </Avatar>
 
                         <div>
-                            <h1 className="font-medium text-xl">Full Name</h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, adipisci.</p>
+                            <h1 className="font-medium text-xl"> {user?.fullname} </h1>
+                            <p> {user?.profile?.bio} </p>
                         </div>
 
                     </div>
@@ -38,12 +42,12 @@ const Profile = () => {
                 <div className="my-5">
                     <div className="flex item -center gap-3 my-2">
                         <Mail />
-                        <span>jobverse@gmail.com</span>
+                        <span> {user?.email} </span>
                     </div>
 
                     <div className="flex item-center gap-3 my-2">
                         <Contact />
-                        <span>1234567890</span>
+                        <span> {user?.phoneNumber} </span>
                     </div>
                 </div>
 
@@ -51,7 +55,7 @@ const Profile = () => {
                     <h2 className="text-2xl">Skills</h2>
                     <div className="flex items-center gap-1">
                         {
-                            skills.length != 0 ? skills.map((item, index) => <Badge key={index}>{item}</Badge>) : <span>NA</span>
+                            user?.profile?.skills.length != 0 ? user?.profile?.skills.map((item, index) => <Badge key={index}>{item}</Badge>) : <span>NA</span>
                         }
                     </div>
                 </div>
@@ -59,7 +63,7 @@ const Profile = () => {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label className="text-md font-bold">Resume</Label>
                     {
-                        isResume ? <a target="blank" href="https://github.com/ksingla1885" className="text-blue-500 w-full hover:underline cursor:pointer">Ketan Kumar</a> : <span>NA</span>
+                        isResume ? <a target="blank" href="https://github.com/ksingla1885" className="text-blue-500 w-full hover:underline cursor-pointer"> {user?.profile?.resumeOriginalName} </a> : <span>NA</span>
                     }
                 </div>
 

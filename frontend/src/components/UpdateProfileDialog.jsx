@@ -9,11 +9,10 @@ import { useSelector, useDispatch} from 'react-redux'
 import axios from 'axios'
 import { USER_API_END_POINT } from '@/utils/constant'
 import { toast } from 'sonner'
-import { setUser } from '@/redux/authSlice';
+import { setUser, setLoading } from '@/redux/authSlice';
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
 
-    const { loading, setLoading } = useState(false);
     const {user} = useSelector(store => store.auth);
 
     const [input, setInput] = useState({
@@ -24,6 +23,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         skills: user?.profile?.skills?.map(skills => skills) || '',
         file: user?.profile?.resume || ''
     });
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
@@ -50,6 +50,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         }
 
         try {
+            setLoading(true);
             const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
                 headers: {
                     contentType: "multipart/form-data",
@@ -63,6 +64,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message);
+        } finally{
+            setLoading(false);
         }
 
         setOpen(false);
