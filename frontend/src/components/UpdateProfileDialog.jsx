@@ -13,6 +13,7 @@ import { setUser, setLoading } from '@/redux/authSlice';
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
 
+    const [loading, setLoading] = useState(false);
     const {user} = useSelector(store => store.auth);
 
     const [input, setInput] = useState({
@@ -23,7 +24,6 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         skills: user?.profile?.skills?.map(skills => skills) || '',
         file: user?.profile?.resume || ''
     });
-    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
