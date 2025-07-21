@@ -1,4 +1,4 @@
-//BUSINESS LOGIC FOR USER REGISTERATION
+//BUSINESS LOGIC FOR USER REGISTRATION
 
 import {User} from "../models/user.model.js";
 import bcrypt from "bcryptjs";
@@ -124,13 +124,12 @@ export const logout = async(req, res) => {
 export const updateProfile = async(req, res) => {
     try {
         const {fullname, email, phoneNumber, bio, skills} = req.body;
+        // console.log(req.body);
         const file = req.file; //for resume file
-
-        
 
         //CLOUDINARY LOGIC FOR UPLOADING RESUME coming soon
 
-         let skillsArray;
+        let skillsArray;
         if(skills){
             skillsArray = skills.split(",");
         }
