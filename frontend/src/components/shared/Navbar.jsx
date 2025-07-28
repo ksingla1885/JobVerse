@@ -71,18 +71,18 @@ const Navbar = () => {
               <Popover className="popover">
                 <PopoverTrigger asChild>
                   <Avatar className="avatar cursor-pointer">
-                    <AvatarImage className="image" src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-isolated-background-avatar-profile-picture-man_1293239-4841.jpg?semt=ais_hybrid&w=740"></AvatarImage>
+                    <AvatarImage className="image" src={user?.profile?.profilePhoto}></AvatarImage>
                   </Avatar>
                 </PopoverTrigger>
 
                 <PopoverContent>
                   <div className="flex gap-4 space-y-2">
                     <Avatar className="cursor-pointer">
-                      <AvatarImage src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-isolated-background-avatar-profile-picture-man_1293239-4841.jpg?semt=ais_hybrid&w=740"></AvatarImage>
+                      <AvatarImage src={user?.profile?.profilePhoto}></AvatarImage>
                     </Avatar>
                     <div>
-                      <h4 className="font-medium">Ketan Singla</h4>
-                      <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet.</p>
+                      <h4 className="font-medium">{user?.fullname}</h4>
+                      <p className="text-sm text-muted-foreground">{user?.profile?.bio}</p>
                     </div>
                   </div>
 

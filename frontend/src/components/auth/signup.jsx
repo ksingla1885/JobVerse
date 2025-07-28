@@ -18,7 +18,7 @@ import { Loader2 } from 'lucide-react'
 
 const Signup = () => {
 
-  const {loading} = useSelector(store => store.auth);
+  const { loading } = useSelector(store => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -42,24 +42,24 @@ const Signup = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    // Ensure file is selected
+    if (!input.file) {
+      toast.error("Please upload a profile image.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("fullname", input.fullname);
     formData.append("email", input.email);
     formData.append("phoneNumber", input.phoneNumber);
     formData.append("password", input.password);
     formData.append("role", input.role);
-
-    if (input.file) {
-      formData.append("file", input.file);
-    }
+    formData.append("file", input.file); // Make sure 'file' field name matches multer config
 
     try {
-
       dispatch(setLoading(true));
-      const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
-        // DO NOT set Content-Type manually, let Axios handle it
-        // DO NOT force withCredentials for public endpoints
-      });
+
+      const res = await axios.post(`${USER_API_END_POINT}/register`, formData);
 
       if (res.data.success) {
         toast.success(res.data.message);
@@ -72,11 +72,11 @@ const Signup = () => {
       } else {
         toast.error("Network error or server not responding.");
       }
-    }
-    finally{
+    } finally {
       dispatch(setLoading(false));
     }
   };
+
 
   return (
     <div>
@@ -162,6 +162,7 @@ const Signup = () => {
                 accept="image/*"
                 type="file"
                 onChange={changeFileHandler}
+                required
                 className="cursor-pointer"
               />
             </div>
@@ -172,7 +173,7 @@ const Signup = () => {
             loading ? <Button> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Account creation in progress </Button> : <Button type="submit" className="w-full my-4">Signup</Button>
           }
 
-          
+
           <span>
             Already have an account? <Link to="/login" className="text-blue-600">Login</Link>
           </span>
