@@ -19,7 +19,7 @@ import { setUser } from '@/redux/authSlice'
 
 
 const Navbar = () => {
-  const {user} = useSelector(store => store.auth);
+  const { user } = useSelector(store => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,8 +27,8 @@ const Navbar = () => {
 
   const logoutHandler = async () => {
     try {
-      const res = await axios.get(`${USER_API_END_POINT}/logout`, {withCredentials:true});
-      if(res.data.success){
+      const res = await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
+      if (res.data.success) {
         dispatch(setUser(null));
         navigate("/");
         toast.success(res.data.message);
@@ -51,14 +51,20 @@ const Navbar = () => {
         <div className="list">
           {/* Navigation Links */}
           <ul className="flex items-center space-x-8 font-medium">
-            <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/">Home</Link> </li>
-            <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/jobs">Jobs</Link> </li>
-            <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/browse">Browse</Link> </li>
-            {/* Example with Link:
-                      <li><Link to="/">Home</Link></li>
-                      <li><Link to="/jobs">Jobs</Link></li>
-                      <li><Link to="/browse">Browse</Link></li>
-                      */}
+            {
+              user && user.role == 'recruiter' ? (
+                <>
+                  <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/admin/companies">Companies</Link> </li>
+                  <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/admin/jobs">Jobs</Link> </li>
+                </>
+              ) : (
+                <>
+                  <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/">Home</Link> </li>
+                  <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/jobs">Jobs</Link> </li>
+                  <li className="hover:text-[#f83002] cursor-pointer"> <Link to="/browse">Browse</Link> </li>
+                </>
+              )
+            }
           </ul>
 
           {
@@ -88,10 +94,15 @@ const Navbar = () => {
 
                   <div className="flex flex-col text-gray-600">
 
-                    <div className="flex w-fit items-center gap-2 cursor-pointer my-2">
-                      <User2 />
-                      <Button variant="link"> <Link to="/profile">View Profile</Link> </Button>
-                    </div>
+                    {
+                      user && user.role == 'student' && (
+                        <div className="flex w-fit items-center gap-2 cursor-pointer my-2">
+                          <User2 />
+                          <Button variant="link"> <Link to="/profile">View Profile</Link> </Button>
+                        </div>
+                      )
+                    }
+
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut />
                       <Button onClick={logoutHandler} variant="link">Logout</Button>
