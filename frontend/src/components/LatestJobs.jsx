@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React from 'react';
 import LatestJobCards from './LatestJobCards';
 import { useSelector } from 'react-redux';
 

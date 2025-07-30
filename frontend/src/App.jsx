@@ -1,19 +1,19 @@
 /* eslint-disable no-unused-vars */
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './App.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import './App.css';
 //import Navbar from './components/shared/Navbar'
-import Login from './components/auth/login'
-import Signup from './components/auth/signup'
-import Home from './components/Home'
-import Jobs from './components/Jobs'
-import Browse from './components/Browse'
-import Profile from './components/Profile'
-import JobDescription from './components/JobDescription'
-import CompanyCreate from './components/admin/CompanyCreate'
+import Login from './components/auth/login';
+import Signup from './components/auth/signup';
+import Home from './components/Home';
+import Jobs from './components/Jobs';
+import Browse from './components/Browse';
+import Profile from './components/Profile';
+import JobDescription from './components/JobDescription';
 
 //ADMIN PERMISSIONS
-import Companies from './components/admin/Companies'
+import Companies from './components/admin/Companies';
+import CompanyCreate from './components/admin/CompanyCreate';
 
 
 const appRouter = createBrowserRouter([

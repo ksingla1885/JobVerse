@@ -1,8 +1,8 @@
-import React from 'react'
-import Navbar from '../shared/Navbar'
-import { Label } from '../ui/label'
-import { Input } from 'postcss'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import Navbar from '../shared/Navbar';
+import { Label } from '../ui/label';
+import { Input } from 'postcss';
+import { useNavigate } from 'react-router-dom';
 
 const CompanyCreate = () => {
     const navigate = useNavigate();

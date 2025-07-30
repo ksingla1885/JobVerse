@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog'
-import { Label } from './ui/label'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
-import { Loader2 } from 'lucide-react'
-import { useSelector, useDispatch} from 'react-redux'
-import axios from 'axios'
-import { USER_API_END_POINT } from '@/utils/constant'
-import { toast } from 'sonner'
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Loader2 } from 'lucide-react';
+import { useSelector, useDispatch} from 'react-redux';
+import axios from 'axios';
+import { USER_API_END_POINT } from '@/utils/constant';
+import { toast } from 'sonner';
 import { setUser, setLoading } from '@/redux/authSlice';
 
 const UpdateProfileDialog = ({ open, setOpen }) => {

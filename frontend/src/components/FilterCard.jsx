@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
-import { RadioGroup, RadioGroupItem} from './ui/radio-group'
-import { Label } from './ui/label'
+import React from 'react';
+import { RadioGroup, RadioGroupItem} from './ui/radio-group';
+import { Label } from './ui/label';
 
 const FilterData = [
   {

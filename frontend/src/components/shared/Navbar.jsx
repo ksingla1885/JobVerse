@@ -1,20 +1,20 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { Avatar, AvatarImage } from '../ui/avatar'
+import React from 'react';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Avatar, AvatarImage } from '../ui/avatar';
 
-import { LogOut, User2 } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { LogOut, User2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
-import "../../App.css"
+import "../../App.css";
 
-import { Button } from '../ui/button'
+import { Button } from '../ui/button';
 // import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'sonner'
-import { USER_API_END_POINT } from '@/utils/constant'
-import axios from 'axios'
-import { setUser } from '@/redux/authSlice'
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
+import { USER_API_END_POINT } from '@/utils/constant';
+import axios from 'axios';
+import { setUser } from '@/redux/authSlice';
 
 
 

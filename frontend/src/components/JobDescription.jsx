@@ -1,13 +1,13 @@
 /* eslint-disable no-undef */
-import React, { useState } from 'react'
-import { Badge } from './ui/badge'
-import { Button } from './ui/button'
+import React, { useState } from 'react';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { JOB_API_END_POINT, APPLICATION_API_END_POINT } from '../utils/constant';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSingleJob } from '@/redux/jobSlice';
+// import { SingleJob } from '@/redux/jobSlice';
 
 
 const JobDescription = () => {

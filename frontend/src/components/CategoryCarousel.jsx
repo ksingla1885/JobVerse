@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel'
-import { Button } from './ui/button'
+import React from 'react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel';
+import { Button } from './ui/button';
 
 
 const category = [
