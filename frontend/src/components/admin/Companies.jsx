@@ -19,7 +19,7 @@ const Companies = () => {
                         className="w-fit"
                         placeholder="Filter by name"
                     />
-                    <Button onClick={() => navigate("admin/companies/create")}> New Company </Button>
+                    <Button onClick={() => navigate("/admin/companies/create")}> New Company </Button>
                 </div>
 
                 <CompaniesTable></CompaniesTable>
