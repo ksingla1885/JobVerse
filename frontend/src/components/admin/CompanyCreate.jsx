@@ -1,8 +1,9 @@
 import React from 'react';
 import Navbar from '../shared/Navbar';
 import { Label } from '../ui/label';
-import { Input } from 'postcss';
 import { useNavigate } from 'react-router-dom';
+import {Button} from '../ui/button';
+import { Input } from '../ui/input';
 
 const CompanyCreate = () => {
     const navigate = useNavigate();

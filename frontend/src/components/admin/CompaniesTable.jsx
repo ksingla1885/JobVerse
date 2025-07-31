@@ -1,8 +1,8 @@
 import React from 'react';
-import { Table, TableCaption, TableHead, TableHeader, TableRow } from '../ui/table';
-import { AvatarImage } from '../ui/avatar';
+import { Table, TableCaption, TableHead, TableHeader, TableRow, TableBody, TableCell } from '../ui/table';
+import { AvatarImage, Avatar } from '../ui/avatar';
 import { Edit2, MoreHorizontal } from 'lucide-react';
-import { PopoverTrigger } from '../ui/popover';
+import { PopoverTrigger, Popover, PopoverContent } from '../ui/popover';
 
 const CompaniesTable = () => {
     return (

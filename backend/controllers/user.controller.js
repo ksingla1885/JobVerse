@@ -1,29 +1,29 @@
-//BUSINESS LOGIC FOR USER REGISTRATION
 
-import {User} from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import getDataUri from "../utils/datauri.js";
+import getDataUri from "../utils/datauri.js"; // ✅ imported getDataUri correctly
 import cloudinary from "../utils/cloudinary.js";
 
-export const register = async (req, res) => {
-    try{
-        const {fullname, email, phoneNumber, password, role} = req.body;
 
-        if(!fullname || !email || !phoneNumber || !password || !role){
+//BUSINESS LOGIC FOR USER REGISTRATION
+export const register = async (req, res) => {
+    try {
+        const { fullname, email, phoneNumber, password, role } = req.body;
+
+        if (!fullname || !email || !phoneNumber || !password || !role) {
             return res.status(400).json({
-                message:"Something is missing",
+                message: "Something is missing",
                 success: false
             });
-        };
+        }
 
         const file = req.file;
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(file.content);
+        const fileUri = getDataUri(file); // ✅ CHANGED: correct usage of getDataUri
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content); // ✅ CHANGED: fixed .content usage
 
-
-        const user = await User.findOne({email});
-        if(user){
+        const user = await User.findOne({ email });
+        if (user) {
             return res.status(400).json({
                 message: "User already exists with same email id",
                 success: false
@@ -37,35 +37,36 @@ export const register = async (req, res) => {
             phoneNumber,
             password: hashedPassword,
             role,
-            profile:{
+            profile: {
                 profilePhoto: cloudResponse.secure_url
             }
-        })
+        });
+
         return res.status(201).json({
             message: "Account created successfully",
             success: true
-        })
-    }
-    catch(error){
+        });
+
+    } catch (error) {
         console.log(error);
     }
-}
+};
 
 
 //BUSINESS LOGIC FOR USER LOGIN
 
 export const login = async (req, res) => {
     try {
-        const {email, password, role} = req.body;
-        if(!email || !password || !role){
+        const { email, password, role } = req.body;
+        if (!email || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
             });
         }
 
-        let user = await User.findOne({email});
-        if(!user){
+        let user = await User.findOne({ email });
+        if (!user) {
             return res.status(400).json({
                 message: "Incorrect email or password",
                 success: false
@@ -73,123 +74,121 @@ export const login = async (req, res) => {
         }
 
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if(!isPasswordMatch){
+        if (!isPasswordMatch) {
             return res.status(400).json({
                 message: "Incorrect email or password",
                 success: false
-            })
+            });
         }
 
-        //CHECK ROLE IS CORRECT OR NOT
-
-        if(role !== user.role){
+        if (role !== user.role) {
             return res.status(400).json({
                 message: "Incorrect role",
                 success: false
-            })
+            });
         }
-
-
-        //GENERATING TOKEN
 
         const tokenData = {
             userId: user._id
-        }
-        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {expiresIn:'1d'});
+        };
+        const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
         user = {
-            _id:user._id,
+            _id: user._id,
             fullname: user.fullname,
             email: user.email,
             phoneNumber: user.phoneNumber,
             role: user.role,
             profile: user.profile
-        }
+        };
 
-        return res.status(200).cookie("token", token, {maxAge:1*24*60*60*1000, httpsOnly:true, sameSite:'strict'}).json({
-            message: `Welcome Back ${user.fullname}`,
-            user,
-            success: true
-        });
+        return res.status(200)
+            .cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' })
+            .json({
+                message: `Welcome Back ${user.fullname}`,
+                user,
+                success: true
+            });
+
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 
 //BUSINESS LOGIC FOR USER LOGOUT
-export const logout = async(req, res) => {
+
+export const logout = async (req, res) => {
     try {
-        return res.status(200).cookie("token", "", {maxAge:0}).json({
-            message: "Logged out successfully",
-            success: true
-        })
+        return res.status(200)
+            .cookie("token", "", { maxAge: 0 })
+            .json({
+                message: "Logged out successfully",
+                success: true
+            });
     } catch (error) {
         console.log(error);
     }
-}
+};
+
 
 //BUSINESS LOGIC FOR UPDATE PROFILE
-export const updateProfile = async(req, res) => {
+
+export const updateProfile = async (req, res) => {
     try {
-        const {fullname, email, phoneNumber, bio, skills} = req.body;
-        // console.log(req.body);
-        const file = req.file; //for resume file
+        const { fullname, email, phoneNumber, bio, skills } = req.body;
+        const file = req.file;
 
-
-
-        //CLOUDINARY LOGIC FOR UPLOADING RESUME
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-        
+        let cloudResponse;
+        if (file) {
+            const fileUri = getDataUri(file); // ✅ CHANGED: added getDataUri call inside file check
+            cloudResponse = await cloudinary.uploader.upload(fileUri.content); // ✅ CHANGED: use fileUri.content
+        }
 
         let skillsArray;
-        if(skills){
+        if (skills) {
             skillsArray = skills.split(",");
         }
-        const userId = req.id;  //middleware authentication
+
+        const userId = req.id;
         let user = await User.findById(userId);
 
-        if(!user){
+        if (!user) {
             return res.status(400).json({
                 message: "User not found",
                 success: false
             });
         }
 
-        //UPDATE USER PROFILE DATA
-        if(fullname) user.fullname = fullname
-        if(email) user.email = email
-        if(phoneNumber) user.phoneNumber = phoneNumber
-        if(bio) user.profile.bio = bio
-        if(skills) user.profile.skills = skillsArray
+        if (fullname) user.fullname = fullname;
+        if (email) user.email = email;
+        if (phoneNumber) user.phoneNumber = phoneNumber;
+        if (bio) user.profile.bio = bio;
+        if (skills) user.profile.skills = skillsArray;
 
-
-        //Resume's logic
-            if(cloudResponse){
-                user.profile.resume = cloudResponse.secure_url;   //save the cloudinary url
-                user.profile.resumeOriginalName = file.originalname //save the original filename
-            }
-
-
+        if (cloudResponse) {
+            user.profile.resume = cloudResponse.secure_url;
+            user.profile.resumeOriginalName = file.originalname;
+        }
 
         await user.save();
 
         user = {
-            _id:user._id,
+            _id: user._id,
             fullname: user.fullname,
             email: user.email,
             phoneNumber: user.phoneNumber,
             role: user.role,
             profile: user.profile
-        }
+        };
+
         return res.status(200).json({
             message: "Profile updated successfully",
             user,
             success: true
-        })
+        });
 
     } catch (error) {
         console.log(error);
     }
-}
+};
