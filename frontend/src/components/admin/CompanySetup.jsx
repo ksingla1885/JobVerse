@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../shared/Navbar';
 import { Button } from '../ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -10,6 +10,7 @@ import axios from 'axios';
 import { COMPANY_API_END_POINT } from '@/utils/constant';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 const CompanySetup = () => {
     const [input, setInput] = useState({
@@ -19,6 +20,8 @@ const CompanySetup = () => {
         location: "",
         file: null
     });
+
+    const {singleCompany} = useSelector(store => store.company);
 
     const [loading, setLoading] = useState(false);
     const params = useParams();
@@ -65,6 +68,16 @@ const CompanySetup = () => {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        setInput({
+            name:singleCompany.name || "",
+            description: singleCompany.description ||"",
+            website: singleCompany.website || "",
+            location: singleCompany.location || "",
+            file: singleCompany.file || null
+        })
+    }, [singleCompany])
 
     return (
         <div>
