@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Navbar from '../shared/Navbar';
 import { Label } from '../ui/label';
 import { useNavigate } from 'react-router-dom';
-import {Button} from '../ui/button';
+import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import axios from 'axios';
 import { COMPANY_API_END_POINT } from '@/utils/constant';
@@ -13,20 +13,24 @@ import { setSingleCompany } from '@/redux/companySlice';
 
 const CompanyCreate = () => {
     const navigate = useNavigate();
-    const [companyName, setCompanyName] = useState();
+    const [companyName, setCompanyName] = useState("");
     const dispatch = useDispatch();
 
-    
 
-    const registerNewCompany = async() => {
+
+    const registerNewCompany = async () => {
+        if (!companyName.trim()) { // ✅ Prevent sending empty name
+            toast.error("Company name is required");
+            return;
+        }
         try {
-            const res = await axios.post(`${COMPANY_API_END_POINT}/register`, {companyName}, {
+            const res = await axios.post(`${COMPANY_API_END_POINT}/register`, { companyName }, {
                 headers: {
-                    'Content-type' : 'application/json'
+                    'Content-type': 'application/json'
                 },
                 withCredentials: true
             });
-            if(res?.data?.success){
+            if (res?.data?.success) {
                 dispatch(setSingleCompany(res.data.company));
                 toast.success(res.data.message);
                 const companyId = res?.data?.company?._id;
@@ -34,6 +38,7 @@ const CompanyCreate = () => {
             }
         } catch (error) {
             console.log(error);
+            toast.error(error?.response?.data?.message || "Something went wrong");
         }
     }
     return (
@@ -53,9 +58,10 @@ const CompanyCreate = () => {
                     type="text"
                     className="my-2"
                     placeholder="Microsoft, Google, etc.."
-                    onChange= {(e) => setCompanyName(e.target.value)}
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
                 />
-                
+
                 <div className="flex items-center gap-2 my-10">
                     <Button variant="outline" onClick={() => navigate("/admin/companies")}> Cancel </Button>
                     <Button onClick={registerNewCompany}> Continue </Button>

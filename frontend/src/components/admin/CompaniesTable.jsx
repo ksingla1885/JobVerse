@@ -1,15 +1,33 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react';
 import { Table, TableCaption, TableHead, TableHeader, TableRow, TableBody, TableCell } from '../ui/table';
 import { AvatarImage, Avatar } from '../ui/avatar';
 import { Edit2, MoreHorizontal } from 'lucide-react';
 import { PopoverTrigger, Popover, PopoverContent } from '../ui/popover';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const CompaniesTable = () => {
-    const { companies } = useSelector(store => store.company);
+    
+    const { companies, searchCompanyByText } = useSelector(store => store.company);
+    const [filterCompany, setFilterCompany] = useState(companies);
+    useEffect(() => {
+        const filteredCompany = companies.length >=0 && companies.filter((company) => {
+            if(!searchCompanyByText){
+                return true;
+            }
+            return company?.name?.toLowerCase().includes(searchCompanyByText.toLowerCase());
+        });
+        setFilterCompany(filteredCompany);
+    }, [companies, searchCompanyByText]);
+
+    const navigate = useNavigate();
+
     return (
         <div>
-            <Table>
+            <Table className="w-300 px-4 overflow-x-auto mx-35 my-5">
                 <TableCaption>A list of your recent registered jobs</TableCaption>
                 <TableHeader>
                     <TableRow>
@@ -23,11 +41,11 @@ const CompaniesTable = () => {
                 <TableBody>
 
                     {
-                        companies?.map((company) => (
-                            <TableRow>
+                        filterCompany?.map((company) => (
+                            <TableRow key={company._id}>
                                 <TableCell>
                                     <Avatar>
-                                        <AvatarImage src="https://images.picxy.com/cache/2022/2/4/f5d59c8c4a1eadb044f785fbcf73342b.jpg" />
+                                        <AvatarImage src={company.logo} />
                                     </Avatar>
                                 </TableCell>
 
@@ -36,12 +54,14 @@ const CompaniesTable = () => {
                                 <TableCell className="text-right cursor-pointer">
                                     <Popover>
                                         <PopoverTrigger> <MoreHorizontal /> </PopoverTrigger>
+
                                         <PopoverContent className="w-32">
-                                            <div className="flex items-center gap-2 w-fit cursor-pointer">
+                                            <div onClick={() => navigate(`/admin/companies/${company._id}`)} className="flex items-center gap-2 w-fit cursor-pointer">
                                                 <Edit2 className="w-4" />
                                                 <span>Edit</span>
                                             </div>
                                         </PopoverContent>
+
                                     </Popover>
                                 </TableCell>
                             </TableRow>

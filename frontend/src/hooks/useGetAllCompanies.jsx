@@ -10,9 +10,10 @@ const useGetAllCompanies = () => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await axios.get(`${COMPANY_API_END_POINT}/get`, {
+        const res = await axios.get(`${COMPANY_API_END_POINT}`, {
           withCredentials: true,
         });
+        console.log("hello test",res)
 
         if (res.data.success) {
           dispatch(setCompanies(res.data.companies));
