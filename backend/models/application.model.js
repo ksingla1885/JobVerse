@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
-//applicatns k liye, konsi company main apply kiya hai aur kiss ne kiya hai
-
+//applicants k liye, konsi company main apply kiya hai aur kiss ne kiya hai
 
 const applicationSchema  = new mongoose.Schema({
     job:{

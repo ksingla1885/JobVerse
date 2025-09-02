@@ -61,7 +61,7 @@ const CompanySetup = () => {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
-                    withCredentials: true, // ✅ Make sure cookies are sent (very important for auth)
+                    withCredentials: true, //Make sure cookies are sent (very important for auth)
                 }
             );
 
@@ -70,9 +70,9 @@ const CompanySetup = () => {
                 navigate("/admin/companies");
             }
         } catch (error) {
-            console.log("AXIOS ERROR:", error); // ✅ Console log entire error for debugging
+            console.log("AXIOS ERROR:", error); //Console log entire error for debugging
 
-            // ✅ Improved toast error handling with fallback
+            
             toast.error(error?.response?.data?.message || "Unauthorized or unexpected error. Please login again.");
         } finally {
             setLoading(false);
