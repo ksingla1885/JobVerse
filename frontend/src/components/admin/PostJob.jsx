@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Label } from '../ui/label';
-import { Input } from 'postcss';
+import { Input } from '../ui/input';
 
 const PostJob = () => {
 
@@ -108,7 +108,7 @@ const PostJob = () => {
                         </div>
 
                         <div>
-                            <Label>no. of Position</Label>
+                            <Label>No. of Position</Label>
                             <Input
                                 type="number"
                                 name="positions"
