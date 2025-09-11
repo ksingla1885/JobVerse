@@ -2,8 +2,9 @@ import { Job } from "../models/job.model.js"
 
 //ADMIN CAN POST JOB
 export const postJob = async(req, res) => {
+   
     try {
-        const {title, description, salary, location, jobType, experience, position, companyId} = req.body
+        const {title, description, salary, location, jobType, experience, position, companyId} = req.body;
 
         const userId = req.id;
         if(!title || !description || !salary || !location || !jobType || !position || !companyId){
@@ -96,6 +97,7 @@ export const getJobById = async(req, res) => {
 
 //NUMBER OF JOBS CREATED BY ADMIN TILL NOW
 export const getAdminJobs = async(req, res) => {
+    
     try {
         const adminId = req.idl
         const jobs = await Job.find({created_by: adminId}).populate({
