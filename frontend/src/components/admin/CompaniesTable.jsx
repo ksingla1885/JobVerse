@@ -81,7 +81,6 @@
 
 
 
-
 import React, { useEffect, useState } from 'react';
 import { Table, TableCaption, TableHead, TableHeader, TableRow, TableBody, TableCell } from '../ui/table';
 import { AvatarImage, Avatar } from '../ui/avatar';
@@ -107,21 +106,23 @@ const CompaniesTable = () => {
     }, [companies, searchCompanyByText]);
 
     return (
-        <div>
-            <Table className="w-300 px-4 overflow-x-auto mx-35 my-5">
-                <TableCaption>A list of your recent registered companies</TableCaption>
+        <div className="w-full px-6">
+            <Table className="w-full table-fixed border border-gray-200">
+                <TableCaption className="text-gray-500 text-sm">
+                    A list of your recent registered companies
+                </TableCaption>
                 <TableHeader>
-                    <TableRow>
-                        <TableHead>Logo</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead className="text-right">Action</TableHead>
+                    <TableRow className="bg-gray-100">
+                        <TableHead className="w-1/6 font-semibold">Logo</TableHead>
+                        <TableHead className="w-1/3 font-semibold">Name</TableHead>
+                        <TableHead className="w-1/3 font-semibold">Date</TableHead>
+                        <TableHead className="w-1/6 text-center font-semibold">Action</TableHead>
                     </TableRow>
                 </TableHeader>
 
                 <TableBody>
                     {filterCompany?.map((company) => (
-                        <TableRow key={company._id}>
+                        <TableRow key={company._id} className="hover:bg-gray-50">
                             <TableCell>
                                 <Avatar>
                                     <AvatarImage src={company.logo} />
@@ -129,13 +130,15 @@ const CompaniesTable = () => {
                             </TableCell>
                             <TableCell>{company.name}</TableCell>
                             <TableCell>{company.createdAt?.split("T")[0]}</TableCell>
-                            <TableCell className="text-right cursor-pointer">
+                            <TableCell className="text-center cursor-pointer">
                                 <Popover>
-                                    <PopoverTrigger><MoreHorizontal /></PopoverTrigger>
-                                    <PopoverContent className="w-32">
+                                    <PopoverTrigger>
+                                        <MoreHorizontal className="text-gray-600 hover:text-black" />
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-32 p-2 rounded-md shadow-md">
                                         <div
                                             onClick={() => navigate(`/admin/companies/${company._id}`)}
-                                            className="flex items-center gap-2 w-fit cursor-pointer"
+                                            className="flex items-center gap-2 w-fit cursor-pointer px-2 py-1 hover:bg-gray-100 rounded-md"
                                         >
                                             <Edit2 className="w-4" />
                                             <span>Edit</span>

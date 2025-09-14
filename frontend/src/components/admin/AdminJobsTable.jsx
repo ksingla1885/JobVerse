@@ -82,21 +82,20 @@
 
 
 
-import React, { useEffect, useState } from 'react';
-import { Table, TableCaption, TableHead, TableHeader, TableRow, TableBody, TableCell } from '../ui/table';
-import { Edit2, MoreHorizontal } from 'lucide-react';
-import { PopoverTrigger, Popover, PopoverContent } from '../ui/popover';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Edit2, Eye, MoreHorizontal } from 'lucide-react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const AdminJobsTable = () => {
     const { allAdminJobs, searchJobByText } = useSelector(store => store.job);
-    const [filteredJobs, setFilteredJobs] = useState([]);
+
+    const [filterJobs, setFilterJobs] = useState(allAdminJobs);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!allAdminJobs) return;
-
         const filteredJobs = allAdminJobs.filter((job) => {
             if (!searchJobByText) return true;
             return (
@@ -104,12 +103,12 @@ const AdminJobsTable = () => {
                 job?.company?.name?.toLowerCase().includes(searchJobByText.toLowerCase())
             );
         });
-
-        setFilteredJobs(filteredJobs);
+        setFilterJobs(filteredJobs);
     }, [allAdminJobs, searchJobByText]);
 
     return (
         <div>
+            {/* ✅ Same CSS classes as old code */}
             <Table className="w-300 px-4 overflow-x-auto mx-35 my-5">
                 <TableCaption>A list of your recent posted jobs</TableCaption>
                 <TableHeader>
@@ -120,9 +119,8 @@ const AdminJobsTable = () => {
                         <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                 </TableHeader>
-
                 <TableBody>
-                    {filteredJobs?.map((job) => (
+                    {filterJobs?.map((job) => (
                         <TableRow key={job._id}>
                             <TableCell>{job?.company?.name}</TableCell>
                             <TableCell>{job?.title}</TableCell>
@@ -132,11 +130,18 @@ const AdminJobsTable = () => {
                                     <PopoverTrigger><MoreHorizontal /></PopoverTrigger>
                                     <PopoverContent className="w-32">
                                         <div
-                                            onClick={() => navigate(`/admin/jobs/${job._id}`)}
+                                            onClick={() => navigate(`/admin/companies/${job._id}`)}
                                             className="flex items-center gap-2 w-fit cursor-pointer"
                                         >
                                             <Edit2 className="w-4" />
                                             <span>Edit</span>
+                                        </div>
+                                        <div
+                                            onClick={() => navigate(`/admin/jobs/${job._id}/applicants`)}
+                                            className="flex items-center gap-2 w-fit cursor-pointer mt-2"
+                                        >
+                                            <Eye className="w-4" />
+                                            <span>Applicants</span>
                                         </div>
                                     </PopoverContent>
                                 </Popover>
@@ -146,7 +151,7 @@ const AdminJobsTable = () => {
                 </TableBody>
             </Table>
         </div>
-    );
-};
+    )
+}
 
-export default AdminJobsTable;
+export default AdminJobsTable

@@ -1,122 +1,77 @@
-import { Job } from "../models/job.model.js"
+// backend/controllers/job.controller.js
 
-//ADMIN CAN POST JOB
-export const postJob = async(req, res) => {
-   
-    try {
-        const {title, description, salary, location, jobType, experience, position, companyId} = req.body;
+import {Job} from "../models/job.model.js"
 
-        const userId = req.id;
-        if(!title || !description || !salary || !location || !jobType || !position || !companyId){
-            return res.status(400).json({
-                message: "Something is missing",
-                success: false
-            })
-        }
+// ================= POST JOB =================
+export const postJob = async (req, res) => {
+  try {
+    let { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
 
-        const job = await Job.create({
-            title,
-            description,
-            requirements: requirements.split(","),
-            salary: Number(salary),
-            location,
-            jobType,
-            experienceLevel: experience,
-            position,
-            company: companyId,
-            created_by: userId
-        })
-        return res.status(200).json({
-            message: "New company created successfully",
-            job,
-            success: true
-        })
-
-    } catch (error) {
-        console.log(error);
+    // Validate required fields
+    if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
     }
-}
 
-
-//FOR STUDENTS
-export const getAllJobs = async(req, res) => {
-    try {
-        const keyword = req.query.keyword || "" ;
-        const query = {
-            $or:[
-                {title: {$regex:keyword, $options:"i"}},
-                {description: {$regex:keyword, $options:"i"}}
-            ]
-        };
-
-        const jobs = await Job.find(query).populate({
-            path: "company"
-        }).sort({createdAt: -1});
-        if(!jobs){
-            return res.status(404).json({
-                message: "Jobs not found",
-                success: false
-            })
-        }
-
-        return res.status(200).json({
-            jobs,
-            success: true
-        })
-    } catch (error) {
-        console.log(error);
+    // Convert requirements to array if it's a string
+    if (typeof requirements === "string") {
+      requirements = requirements.split(',').map(r => r.trim()).filter(Boolean);
     }
-}
 
+    const job = await Job.create({
+      title,
+      description,
+      requirements,
+      salary,
+      location,
+      jobType,
+      experienceLevel: experience, // Map experience to experienceLevel
+      position: position, // Map position to position
+      company: companyId, // Map companyId to company
+      createdBy: req.id, // set by isAuthenticated middleware
+    });
 
-// FOR STUDENT
-export const getJobById = async(req, res) => {
-    try {
-        const jobId = req.params.id;
-        const job = await Job.findById(jobId).populate({
-            path:"applications"
-        });
+    res.status(201).json({ success: true, message: "Job posted successfully", job });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
-        if(!job){
-            return res.status(404).json({
-                message: "Jobs not found",
-                success: false
-            })
-        }
+// ================= GET ALL JOBS =================
+export const getAllJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find()
+      .populate("company")
+      .sort({ createdAt: -1 });
 
-        return res.status(200).json({
-            job,
-            success: true
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
+    res.status(200).json({ success: true, jobs });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
+// ================= GET JOB BY ID =================
+export const getJobById = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id).populate("company").populate("applications");
+    if (!job) return res.status(404).json({ success: false, message: "Job not found" });
 
+    res.status(200).json({ success: true, job });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
-//NUMBER OF JOBS CREATED BY ADMIN TILL NOW
-export const getAdminJobs = async(req, res) => {
-    
-    try {
-        const adminId = req.idl
-        const jobs = await Job.find({created_by: adminId}).populate({
-            path: "company",
-            createdAt: -1
-        });
+// ================= GET ADMIN JOBS =================
+export const getAdminJobs = async (req, res) => {
+  try {
+    const userId = req.id; // ✅ fixed typo (was req.idl earlier)
 
-        if(!jobs){
-            return res.status(404).json({
-                message: "Jobs not found",
-                success: false
-            })
-        }
+  const jobs = await Job.find({ createdBy: userId })
+      .populate("company")
+      .populate("applications");
 
-        return res.status(200).json({
-            jobs,
-            success: true
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
+    res.status(200).json({ success: true, jobs });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
