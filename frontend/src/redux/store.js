@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers } from "@reduxjs/toolkit";
 import authSlice from "./authSlice";
 import jobSlice from "./jobSlice"
 import companySlice from "./companySlice";
-import { combineReducers } from "@reduxjs/toolkit";
 import applicationSlice from "./applicationSlice";
 
 import {
-    persistStore,
     persistReducer,
     FLUSH,
     REHYDRATE,

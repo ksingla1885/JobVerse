@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User, Mail, Phone, FileText, Award } from 'lucide-react';
 import { useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import { USER_API_END_POINT } from '@/utils/constant';
@@ -21,9 +21,21 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         email: user?.email || '',
         phoneNumber: user?.phoneNumber || '',
         bio: user?.profile?.bio || '',
-        skills: user?.profile?.skills?.map(skills => skills) || '',
+        skills: user?.profile?.skills ? user.profile.skills.join(', ') : '',
         file: user?.profile?.resume || ''
     });
+
+    // Debug initial state
+    console.log('UpdateProfileDialog - Initial input state:', input);
+    console.log('UpdateProfileDialog - Current user skills:', user?.profile?.skills);
+
+    // Watch for dialog open and user changes
+    useEffect(() => {
+        if (open) {
+            console.log('UpdateProfileDialog opened - Current user data:', user);
+            console.log('UpdateProfileDialog opened - User skills:', user?.profile?.skills);
+        }
+    }, [open, user]);
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
@@ -37,13 +49,24 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
     const submitHandler =  async (e) => {
         e.preventDefault();
+
+        // Debug logging
+        console.log('Submitting form with data:', input);
+
         // Let's call API
         const formData = new FormData();
         formData.append("fullname", input.fullname);
         formData.append("email", input.email);
         formData.append("phoneNumber", input.phoneNumber);
         formData.append("bio", input.bio);
-        formData.append("skills", input.skills);
+
+        // Handle skills properly - convert to array if it's a string
+        if (input.skills) {
+            const skillsArray = input.skills.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0);
+            console.log('Original skills string:', input.skills);
+            console.log('Converted skills array:', skillsArray);
+            formData.append("skills", JSON.stringify(skillsArray));
+        }
 
         if(input.file){
             formData.append("file", input.file);
@@ -51,121 +74,188 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
         try {
             setLoading(true);
+            console.log('Making API call to:', `${USER_API_END_POINT}/profile/update`);
+
             const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
                 headers: {
-                    contentType: "multipart/form-data",
+                    'Content-Type': 'multipart/form-data',
                 },
                 withCredentials: true
             });
+
+            console.log('API Response:', res.data);
+
             if(res.data.success){
+                console.log('Updating Redux state...');
+                console.log('New user data:', res.data.user);
+                console.log('New user skills:', res.data.user?.profile?.skills);
                 dispatch(setUser(res.data.user));
+                console.log('Redux state updated, showing success toast...');
                 toast.success(res.data.message);
+
+                // Small delay to ensure Redux state updates before closing dialog
+                setTimeout(() => {
+                    console.log('Closing dialog...');
+                    setOpen(false);
+                }, 100);
+            } else {
+                console.error('API returned success=false:', res.data);
+                toast.error(res.data.message || 'Update failed');
             }
         } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.message);
+            console.error('Update profile error:', error);
+            console.error('Error response:', error.response?.data);
+
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else if (error.message) {
+                toast.error(`Update failed: ${error.message}`);
+            } else {
+                toast.error('Update failed. Please try again.');
+            }
         } finally{
+            console.log('Resetting loading state...');
             setLoading(false);
         }
-
-        setOpen(false);
-        console.log(input);
     }
 
 
     return (
         <div>
 
-            <Dialog open={open}>
-                <DialogContent className="sm:max-w-[425px]" onInteractOutside={() => setOpen(false)}>
-                    <DialogHeader>
-                        <DialogTitle className="flex flex-col items-center">
-                            Update Profile
-                        </DialogTitle>
-                    </DialogHeader>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="sm:max-w-[450px] p-0 overflow-hidden bg-white shadow-xl border-0">
+                    {/* Header with gradient accent */}
+                    <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500"></div>
 
-                    <form onSubmit={submitHandler}>
-                        <div className="grid gap-4 py-4">
+                    <div className="p-5">
+                        <DialogHeader className="mb-4">
+                            <DialogTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                                <User className="h-4 w-4 text-blue-600" />
+                                Update Profile
+                            </DialogTitle>
+                        </DialogHeader>
 
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name">Name</Label>
+                        <form onSubmit={submitHandler} className="space-y-3">
+                            {/* Full Name */}
+                            <div className="space-y-1">
+                                <Label htmlFor="fullname" className="text-sm font-medium text-gray-700">
+                                    Full Name
+                                </Label>
                                 <Input
-                                    id="name"
-                                    name="name"
+                                    id="fullname"
+                                    name="fullname"
                                     type="text"
-                                    value= {input.fullname}
-                                    onChange= {changeEventHandler}
-                                    className="col-span-3 "
+                                    value={input.fullname}
+                                    onChange={changeEventHandler}
+                                    className="h-9 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                    placeholder="Enter your full name"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="email">Email</Label>
+                            {/* Email */}
+                            <div className="space-y-1">
+                                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                                    Email Address
+                                </Label>
                                 <Input
                                     id="email"
                                     name="email"
                                     type="email"
-                                    value= {input.email}
-                                    onChange= {changeEventHandler}
-                                    className="col-span-3 "
+                                    value={input.email}
+                                    onChange={changeEventHandler}
+                                    className="h-9 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                    placeholder="Enter your email"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="number">Number</Label>
+                            {/* Phone Number */}
+                            <div className="space-y-1">
+                                <Label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">
+                                    Phone Number
+                                </Label>
                                 <Input
-                                    id="number"
-                                    name="number"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
                                     type="tel"
-                                    value= {input.phoneNumber}
-                                    onChange= {changeEventHandler}
-                                    className="col-span-3 "
+                                    value={input.phoneNumber}
+                                    onChange={changeEventHandler}
+                                    className="h-9 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                    placeholder="Enter your phone number"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="bio">Bio</Label>
+                            {/* Bio */}
+                            <div className="space-y-1">
+                                <Label htmlFor="bio" className="text-sm font-medium text-gray-700">
+                                    Bio
+                                </Label>
                                 <Input
                                     id="bio"
                                     name="bio"
-                                    value= {input.bio}
-                                    onChange= {changeEventHandler}
-                                    className="col-span-3 "
+                                    value={input.bio}
+                                    onChange={changeEventHandler}
+                                    className="h-9 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                    placeholder="Tell us about yourself"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="skills">Skills</Label>
+                            {/* Skills */}
+                            <div className="space-y-1">
+                                <Label htmlFor="skills" className="text-sm font-medium text-gray-700">
+                                    Skills
+                                </Label>
                                 <Input
                                     id="skills"
                                     name="skills"
-                                    value= {input.skills}
-                                    onChange= {changeEventHandler}
-                                    className="col-span-3 "
+                                    value={input.skills}
+                                    onChange={changeEventHandler}
+                                    className="h-9 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                    placeholder="e.g., JavaScript, React, Node.js"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="file">Resume</Label>
+                            {/* Resume Upload */}
+                            <div className="space-y-1">
+                                <Label htmlFor="file" className="text-sm font-medium text-gray-700">
+                                    Resume (PDF)
+                                </Label>
                                 <Input
                                     id="file"
                                     name="file"
                                     type="file"
                                     accept="application/pdf"
-                                    className="col-span-3 "
+                                    className="h-9 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-50 file:text-gray-700"
                                     onChange={fileChangeHandler}
                                 />
                             </div>
 
-                        </div>
-
-                        <DialogFooter>
-                            {
-                                loading ? <Button> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Page is loading </Button> : <Button type="submit" className="w-full my-4"> Update </Button>
-                            }
-                        </DialogFooter>
-                    </form>
-
+                            <DialogFooter className="mt-4 pt-3 border-t border-gray-100 flex gap-2">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setOpen(false)}
+                                    className="flex-1 h-9 border-gray-300 text-gray-700 hover:bg-gray-50"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="flex-1 h-9 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50"
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                            Updating...
+                                        </>
+                                    ) : (
+                                        'Update'
+                                    )}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </div>
                 </DialogContent>
             </Dialog>
 

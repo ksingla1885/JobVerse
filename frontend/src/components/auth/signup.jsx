@@ -8,17 +8,15 @@ import { Input } from '../ui/input';
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Button } from '../ui/button';
 import { Link, useNavigate } from 'react-router-dom';
-
 import '../../App.css';
 import { USER_API_END_POINT } from '@/utils/constant';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../redux/authSlice';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Briefcase, Phone, Upload, Eye, EyeOff } from 'lucide-react';
 
 const Signup = () => {
-
   const { loading } = useSelector(store => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -32,6 +30,8 @@ const Signup = () => {
     file: ""
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -43,7 +43,6 @@ const Signup = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    // Ensure file is selected
     if (!input.file) {
       toast.error("Please upload a profile image.");
       return;
@@ -55,13 +54,11 @@ const Signup = () => {
     formData.append("phoneNumber", input.phoneNumber);
     formData.append("password", input.password);
     formData.append("role", input.role);
-    formData.append("file", input.file); // Make sure 'file' field name matches multer config
+    formData.append("file", input.file);
 
     try {
       dispatch(setLoading(true));
-
       const res = await axios.post(`${USER_API_END_POINT}/register`, formData);
-
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/login");
@@ -78,107 +75,214 @@ const Signup = () => {
     }
   };
 
-
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <Navbar />
 
-      <div className="signupdiv">
-        <form className="signupform" onSubmit={submitHandler}>
-          <h1>Signup</h1>
-
-          <div className="my-2">
-            <Label>Full Name</Label>
-            <Input
-              type="text"
-              placeholder="Full Name"
-              value={input.fullname}
-              name="fullname"
-              onChange={changeEventHandler}
-            />
-          </div>
-
-          <div className="my-2">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              placeholder="Email"
-              value={input.email}
-              name="email"
-              onChange={changeEventHandler}
-            />
-          </div>
-
-          <div className="my-2">
-            <Label>Phone Number</Label>
-            <Input
-              type="text"
-              placeholder="+91 12345..."
-              value={input.phoneNumber}
-              name="phoneNumber"
-              onChange={changeEventHandler}
-            />
-          </div>
-
-          <div className="my-2">
-            <Label>Password</Label>
-            <Input
-              type="password"
-              value={input.password}
-              name="password"
-              onChange={changeEventHandler}
-            />
-          </div>
-
-          <div className="flex items-center justify-center">
-            <RadioGroup className="flex items-center gap-4 my-5">
-              <div className="students">
-                <Input
-                  className="cursor-pointer"
-                  type="radio"
-                  name="role"
-                  value="student"
-                  checked={input.role === "student"}
-                  onChange={changeEventHandler}
-                />
-                <Label htmlFor="option-one">Student</Label>
+      <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-4 py-8">
+        <div className="w-full max-w-lg">
+          {/* Signup Card */}
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-4">
+                <User className="h-8 w-8 text-white" />
               </div>
+              <h1 className="text-2xl font-bold text-white mb-2">Join JobVerse</h1>
+              <p className="text-blue-100">Create your account and start your journey</p>
+            </div>
 
-              <div className="recruiter flex items-center space-x-2">
-                <Input
-                  className="cursor-pointer"
-                  type="radio"
-                  name="role"
-                  value="recruiter"
-                  checked={input.role === "recruiter"}
-                  onChange={changeEventHandler}
-                />
-                <Label htmlFor="option-two">Recruiter</Label>
-              </div>
-            </RadioGroup>
+            {/* Form */}
+            <div className="p-8">
+              <form onSubmit={submitHandler} className="space-y-6">
 
-            <div className="flex items-center gap-2">
-              <Label className="my-5 display-flex gap-5">Profile</Label>
-              <Input
-                accept="image/*"
-                type="file"
-                onChange={changeFileHandler}
-                required
-                className="cursor-pointer"
-              />
+                {/* Full Name Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="fullname" className="text-sm font-medium text-gray-700">
+                    Full Name
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Input
+                      id="fullname"
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={input.fullname}
+                      name="fullname"
+                      onChange={changeEventHandler}
+                      className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Email Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    Email Address
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={input.email}
+                      name="email"
+                      onChange={changeEventHandler}
+                      className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Phone Number Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">
+                    Phone Number
+                  </Label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Input
+                      id="phoneNumber"
+                      type="text"
+                      placeholder="+91 12345 67890"
+                      value={input.phoneNumber}
+                      name="phoneNumber"
+                      onChange={changeEventHandler}
+                      className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Password Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a strong password"
+                      value={input.password}
+                      name="password"
+                      onChange={changeEventHandler}
+                      className="pl-10 pr-12 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Role Selection */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium text-gray-700">I want to:</Label>
+                  <RadioGroup className="flex items-center gap-6">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                        type="radio"
+                        name="role"
+                        value="student"
+                        checked={input.role === "student"}
+                        onChange={changeEventHandler}
+                      />
+                      <Label htmlFor="student" className="flex items-center gap-2 cursor-pointer">
+                        <User className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm text-gray-700">Find Jobs</span>
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <input
+                        className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                        type="radio"
+                        name="role"
+                        value="recruiter"
+                        checked={input.role === "recruiter"}
+                        onChange={changeEventHandler}
+                      />
+                      <Label htmlFor="recruiter" className="flex items-center gap-2 cursor-pointer">
+                        <Briefcase className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm text-gray-700">Hire Talent</span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                {/* Profile Image Upload */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-gray-700">Profile Picture</Label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 transition-colors">
+                    <div className="text-center">
+                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                      <div className="text-sm text-gray-600 mb-2">
+                        <label htmlFor="file" className="text-blue-600 hover:text-blue-700 cursor-pointer font-medium">
+                          Click to upload
+                        </label>
+                        <span className="text-gray-400"> or drag and drop</span>
+                      </div>
+                      <p className="text-xs text-gray-500">PNG, JPG up to 2MB</p>
+                      <input
+                        id="file"
+                        type="file"
+                        accept="image/*"
+                        onChange={changeFileHandler}
+                        className="hidden"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating account...
+                    </>
+                  ) : (
+                    'Create Account'
+                  )}
+                </Button>
+
+                {/* Divider */}
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-200" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white px-2 text-gray-500">Already have an account?</span>
+                  </div>
+                </div>
+
+                {/* Login link */}
+                <div className="text-center">
+                  <Link
+                    to="/login"
+                    className="text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors"
+                  >
+                    Sign in instead
+                  </Link>
+                </div>
+              </form>
             </div>
           </div>
-
-
-          {
-            loading ? <Button> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Account creation in progress </Button> : <Button type="submit" className="w-full my-4">Signup</Button>
-          }
-
-
-          <span>
-            Already have an account? <Link to="/login" className="text-blue-600">Login</Link>
-          </span>
-        </form>
+        </div>
       </div>
     </div>
   );

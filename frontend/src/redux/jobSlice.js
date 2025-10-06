@@ -7,12 +7,24 @@ const jobSlice = createSlice({
         singleJob:null,
         allAdminJobs:[],
         searchJobByText:"",
+        filters: {
+            location: "",
+            industry: "",
+            salary: ""
+        },
+        filteredJobs: undefined // Start as undefined, not empty array
     },
     reducers:{
         setAllJobs: (state, action) => {
-            state.allJobs = action.payload;
+            // Remove duplicates based on job ID
+            const uniqueJobs = action.payload.filter((job, index, self) =>
+                index === self.findIndex(j => j._id === job._id)
+            );
+            state.allJobs = uniqueJobs;
+            // Initialize filteredJobs as undefined when no filters are applied
+            state.filteredJobs = undefined;
         },
-        singleJob:(state, action) => {
+        setSingleJob:(state, action) => {
             state.singleJob = action.payload;
         },
         setAllAdminJobs: (state, action) => {
@@ -20,9 +32,101 @@ const jobSlice = createSlice({
         },
         searchJobByText: (state, action) => {
             state.searchJobByText = action.payload;
+            // Ensure filters object exists before applying filters
+            if (!state.filters) {
+                state.filters = {
+                    location: "",
+                    industry: "",
+                    salary: ""
+                };
+            }
+            // Apply filters when search text changes
+            state.filteredJobs = applyFilters(state.allJobs, state.filters, state.searchJobByText);
+        },
+        setFilter: (state, action) => {
+            const { filterType, value } = action.payload;
+            // Ensure filters object exists
+            if (!state.filters) {
+                state.filters = {
+                    location: "",
+                    industry: "",
+                    salary: ""
+                };
+            }
+            state.filters[filterType] = value;
+            // Apply filters when filter changes
+            state.filteredJobs = applyFilters(state.allJobs, state.filters, state.searchJobByText);
+        },
+        clearFilters: (state) => {
+            state.filters = {
+                location: "",
+                industry: "",
+                salary: ""
+            };
+            state.searchJobByText = "";
+            // Reset filteredJobs when filters are cleared
+            state.filteredJobs = undefined;
         }
     }
 });
 
-export const {setAllJobs, singleJob, setAllAdminJobs, searchJobByText} = jobSlice.actions;
+// Helper function to apply filters
+const applyFilters = (jobs, filters, searchText) => {
+    // Ensure filters object exists
+    if (!filters) {
+        filters = {
+            location: "",
+            industry: "",
+            salary: ""
+        };
+    }
+
+    let filteredJobs = [...jobs];
+
+    // Apply search text filter
+    if (searchText) {
+        filteredJobs = filteredJobs.filter(job =>
+            job.title?.toLowerCase().includes(searchText.toLowerCase()) ||
+            job.description?.toLowerCase().includes(searchText.toLowerCase()) ||
+            job.company?.name?.toLowerCase().includes(searchText.toLowerCase())
+        );
+    }
+
+    // Apply location filter
+    if (filters.location) {
+        filteredJobs = filteredJobs.filter(job =>
+            job.location?.toLowerCase().includes(filters.location.toLowerCase())
+        );
+    }
+
+    // Apply industry filter
+    if (filters.industry) {
+        filteredJobs = filteredJobs.filter(job =>
+            job.title?.toLowerCase().includes(filters.industry.toLowerCase()) ||
+            job.company?.name?.toLowerCase().includes(filters.industry.toLowerCase())
+        );
+    }
+
+    // Apply salary filter
+    if (filters.salary) {
+        filteredJobs = filteredJobs.filter(job => {
+            if (!job.salary) return false;
+
+            const jobSalary = parseInt(job.salary.replace(/[^\d]/g, ''));
+            const filterSalary = filters.salary;
+
+            if (filterSalary === "0-3 LPA") return jobSalary >= 0 && jobSalary <= 300000;
+            if (filterSalary === "3-6 LPA") return jobSalary >= 300000 && jobSalary <= 600000;
+            if (filterSalary === "6-10 LPA") return jobSalary >= 600000 && jobSalary <= 1000000;
+            if (filterSalary === "10-15 LPA") return jobSalary >= 1000000 && jobSalary <= 1500000;
+            if (filterSalary === "15+ LPA") return jobSalary >= 1500000;
+
+            return true;
+        });
+    }
+
+    return filteredJobs;
+};
+
+export const {setAllJobs, setSingleJob, setAllAdminJobs, searchJobByText, setFilter, clearFilters} = jobSlice.actions;
 export default jobSlice.reducer;
