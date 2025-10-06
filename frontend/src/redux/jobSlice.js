@@ -12,7 +12,8 @@ const jobSlice = createSlice({
             industry: "",
             salary: ""
         },
-        filteredJobs: undefined // Start as undefined, not empty array
+        filteredJobs: undefined, // Start as undefined, not empty array
+        allAppliedJobs: []
     },
     reducers:{
         setAllJobs: (state, action) => {
@@ -32,7 +33,7 @@ const jobSlice = createSlice({
         },
         searchJobByText: (state, action) => {
             state.searchJobByText = action.payload;
-            // Ensure filters object exists before applying filters
+
             if (!state.filters) {
                 state.filters = {
                     location: "",
@@ -66,6 +67,9 @@ const jobSlice = createSlice({
             state.searchJobByText = "";
             // Reset filteredJobs when filters are cleared
             state.filteredJobs = undefined;
+        },
+        setAllAppliedJobs: (state, action) => {
+            state.allAppliedJobs = action.payload;
         }
     }
 });
@@ -128,5 +132,14 @@ const applyFilters = (jobs, filters, searchText) => {
     return filteredJobs;
 };
 
-export const {setAllJobs, setSingleJob, setAllAdminJobs, searchJobByText, setFilter, clearFilters} = jobSlice.actions;
+export const {
+    setAllJobs,
+    setSingleJob,
+    setAllAdminJobs,
+    searchJobByText,
+    setFilter,
+    clearFilters,
+    setAllAppliedJobs
+} = jobSlice.actions;
+
 export default jobSlice.reducer;

@@ -1,8 +1,12 @@
 import React from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Badge } from './ui/badge';
+import { useSelector } from 'react-redux';
+import { all } from 'axios';
 
 const AppliedJobTable = () => {
+
+  const {allAppliedJobs} = useSelector(store => store.job);
   return (
     <div>
       <Table>
@@ -17,16 +21,34 @@ const AppliedJobTable = () => {
         </TableHeader>
 
         <TableBody>
-            {
-                [1, 2].map((item, index) => (
-                    <TableRow key={index}>
-                        <TableCell>18-07-2025</TableCell>
-                        <TableCell>Full Stack Developer</TableCell>
-                        <TableCell>Microsoft</TableCell>
-                        <TableCell className="text-right"> <Badge>Accepted</Badge> </TableCell>
+            {!allAppliedJobs ? (
+                <TableRow>
+                    <TableCell colSpan={4} className="text-center py-4">
+                        Loading...
+                    </TableCell>
+                </TableRow>
+            ) : allAppliedJobs.length === 0 ? (
+                <TableRow>
+                    <TableCell colSpan={4} className="text-center py-4 text-gray-500">
+                        No applied jobs found
+                    </TableCell>
+                </TableRow>
+            ) : (
+                allAppliedJobs.map((appliedJob) => (
+                    <TableRow key={appliedJob._id}>
+                        <TableCell>
+                            {appliedJob.createdAt ? new Date(appliedJob.createdAt).toLocaleDateString() : 'N/A'}
+                        </TableCell>
+                        <TableCell>{appliedJob.job?.title || 'N/A'}</TableCell>
+                        <TableCell>{appliedJob.job?.company?.name || 'N/A'}</TableCell>
+                        <TableCell className="text-right">
+                            <Badge variant={appliedJob.status === 'accepted' ? 'default' : 'secondary'}>
+                                {appliedJob.status || 'Pending'}
+                            </Badge>
+                        </TableCell>
                     </TableRow>
                 ))
-            }
+            )}
         </TableBody>
       </Table>
     </div>
