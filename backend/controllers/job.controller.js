@@ -7,9 +7,26 @@ export const postJob = async (req, res) => {
   try {
     let { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
 
+    console.log('Received job data:', {
+      title, description, requirements, salary, location, jobType, experience, position, companyId
+    });
+
     // Validate required fields
-    if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
+    if (!title || !description || !requirements || !location || !jobType || !companyId) {
+      return res.status(400).json({ success: false, message: "String fields are required" });
+    }
+
+    // Validate number fields separately
+    if (typeof salary !== 'number' || isNaN(salary) || salary < 0) {
+      return res.status(400).json({ success: false, message: "Salary must be a valid positive number" });
+    }
+
+    if (typeof experience !== 'number' || isNaN(experience) || experience < 0) {
+      return res.status(400).json({ success: false, message: "Experience must be a valid non-negative number" });
+    }
+
+    if (typeof position !== 'number' || isNaN(position) || position < 0) {
+      return res.status(400).json({ success: false, message: "Position must be a valid non-negative number" });
     }
 
     // Convert requirements to array if it's a string

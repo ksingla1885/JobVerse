@@ -44,22 +44,41 @@ const PostJob = () => {
         const requiredFields = [
             'title', 'description', 'requirements', 'salary', 'location', 'jobType', 'experience', 'position', 'companyId'
         ];
+
+        // Special handling for number fields
+        const numberFields = ['salary', 'experience', 'position'];
+
         for (const field of requiredFields) {
-            if (!input[field] || (typeof input[field] === 'string' && input[field].trim() === '')) {
-                toast.error(`Please fill the ${field} field.`);
-                return;
+            if (numberFields.includes(field)) {
+                // For number fields, check if it's a valid number and not NaN
+                const numValue = Number(input[field]);
+                if (isNaN(numValue) || numValue < 0) {
+                    toast.error(`Please enter a valid ${field} (must be a positive number).`);
+                    return;
+                }
+            } else {
+                // For string fields, check if empty or just whitespace
+                if (!input[field] || (typeof input[field] === 'string' && input[field].trim() === '')) {
+                    toast.error(`Please fill the ${field} field.`);
+                    return;
+                }
             }
         }
 
         try {
             setLoading(true);
 
-            // Ensure number fields are numbers
+            // Prepare payload with proper data types
             const payload = {
-                ...input,
+                title: input.title.trim(),
+                description: input.description.trim(),
+                requirements: input.requirements.trim(),
                 salary: Number(input.salary),
+                location: input.location.trim(),
+                jobType: input.jobType.trim(),
                 experience: Number(input.experience),
                 position: Number(input.position),
+                companyId: input.companyId,
             };
 
             if (!payload.companyId) {
@@ -67,6 +86,8 @@ const PostJob = () => {
                 setLoading(false);
                 return;
             }
+
+            console.log('Sending payload:', payload);
 
             const res = await axios.post(`${JOB_API_END_POINT}/post`, payload, {
                 headers: { 'Content-Type': 'application/json' },
@@ -78,7 +99,17 @@ const PostJob = () => {
                 navigate("/admin/jobs");
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || "Something went wrong");
+            console.error('Job post error:', error.response?.data || error.message);
+
+            if (error.response?.status === 400) {
+                toast.error(error.response.data?.message || "Invalid job data. Please check all fields.");
+            } else if (error.response?.status === 401) {
+                toast.error("Please log in as an admin to post jobs.");
+            } else if (error.response?.status === 403) {
+                toast.error("You don't have permission to post jobs.");
+            } else {
+                toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
+            }
         } finally {
             setLoading(false);
         }
