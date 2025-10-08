@@ -54,7 +54,7 @@ const Profile = () => {
                                 <div className="relative">
                                     <div className="w-24 h-24 rounded-full border-4 border-gray-200 overflow-hidden">
                                         <Avatar className="w-full h-full">
-                                            <AvatarImage src="https://images.picxy.com/cache/2022/2/4/f5d59c8c4a1eadb044f785fbcf73342b.jpg" />
+                                            <AvatarImage src={user.profile.profilePhoto} />
                                         </Avatar>
                                     </div>
                                 </div>
