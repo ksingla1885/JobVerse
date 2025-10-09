@@ -1,83 +1,26 @@
 /* eslint-disable no-unused-vars */
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import './App.css';
-//import Navbar from './components/shared/Navbar'
-import Login from './components/auth/login';
-import Signup from './components/auth/signup';
-import Home from './components/Home';
-import Jobs from './components/Jobs';
+import Login from './components/auth/Login';
+import Signup from './components/auth/Signup';
 import Browse from './components/Browse';
-import Profile from './components/Profile';
 import JobDescription from './components/JobDescription';
-
-//ADMIN PERMISSIONS
+import AdminDashboard from './components/admin/AdminDashboard';
 import Companies from './components/admin/Companies';
-import CompanyCreate from './components/admin/CompanyCreate';
-import CompanySetup from './components/admin/CompanySetup';
-import AdminJobs from './components/admin/AdminJobs';
-import PostJob from './components/admin/PostJob';
+import CreateCompany from './components/admin/CompanyCreate';
+import CreateJobs from './components/admin/PostJob';
+import PostedJobs from './components/admin/AdminJobs';
 import Applicants from './components/admin/Applicants';
 
+const Home = lazy(() => import('./components/Home'));
+const Jobs = lazy(() => import('./components/Jobs'));
+const Profile = lazy(() => import('./components/Profile'));
+const PostJob = lazy(() => import('./components/admin/PostJob'));
+const CompanySetup = lazy(() => import('./components/admin/CompanySetup'));
+const AdminJobs = lazy(() => import('./components/admin/AdminJobs'));
 
-const appRouter = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home/>
-  },
-  {
-    path: '/login',
-    element: <Login/>
-  },
-  {
-    path: '/signup',
-    element: <Signup/>
-  },
-  {
-    path: '/jobs',
-    element: <Jobs/>
-  },
-  {
-    path: "/description/:id",
-    element: <JobDescription/>
-  },
-  {
-    path: '/browse',
-    element: <Browse/>
-  },
-  {
-    path: '/profile',
-    element: <Profile/>
-  },
-
-
-  //ADMIN PERMISSIONS
-
-  {
-    path: "/admin/companies",
-    element: <Companies />
-  },
-  {
-    path: "/admin/companies/create",
-    element: <CompanyCreate />
-  },
-  {
-    path: "/admin/companies/:id",
-    element: <CompanySetup />
-  },
-  {
-    path: "/admin/jobs",
-    element: <AdminJobs />
-  },
-  {
-    path: "/admin/jobs/create",
-    element: <PostJob />
-  },
-  {
-    path: "/admin/jobs/:id/applicants",
-    element: <Applicants />
-  }
-])
 
 
 function App() {
@@ -85,7 +28,31 @@ function App() {
     <>
       
      <div>
-      <RouterProvider router = {appRouter}/>
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/browse" element={<Browse />} />
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/description/:id" element={<JobDescription />} />
+            <Route path="/profile" element={<Profile />} />
+            {/* admin routes */}
+            <Route path="/admin" element={<AdminDashboard />} >
+              <Route path="companies" element={<Companies />} />
+              <Route path="create-company" element={<CreateCompany />} />
+              <Route path="create-job" element={<CreateJobs />} />
+              <Route path="posted-jobs" element={<PostedJobs />} />
+              <Route path="applicants/:id" element={<Applicants />} />
+              <Route path="companies/:id" element={<CompanySetup />} />
+              <Route path="jobs" element={<AdminJobs />} />
+              <Route path="jobs/create" element={<PostJob />} />
+              <Route path="jobs/:id/applicants" element={<Applicants />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </Router>
      </div>
     
     </>

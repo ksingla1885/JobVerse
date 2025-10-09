@@ -113,25 +113,27 @@ const applyFilters = (jobs, filters, searchText) => {
 
     // Apply salary filter
     if (filters.salary) {
+        const [minSalary, maxSalary] = filters.salary.replace(' LPA', '').replace('+', '').split('-').map(Number);
+
         filteredJobs = filteredJobs.filter(job => {
             if (!job.salary) return false;
 
-            const jobSalary = parseInt(job.salary.replace(/[^\d]/g, ''));
-            const filterSalary = filters.salary;
+            const jobSalary = job.salary;
 
-            if (filterSalary === "0-3 LPA") return jobSalary >= 0 && jobSalary <= 300000;
-            if (filterSalary === "3-6 LPA") return jobSalary >= 300000 && jobSalary <= 600000;
-            if (filterSalary === "6-10 LPA") return jobSalary >= 600000 && jobSalary <= 1000000;
-            if (filterSalary === "10-15 LPA") return jobSalary >= 1000000 && jobSalary <= 1500000;
-            if (filterSalary === "15+ LPA") return jobSalary >= 1500000;
+            if (filters.salary === "15+ LPA") {
+                return jobSalary >= 15;
+            }
 
-            return true;
+            if (maxSalary) {
+                return jobSalary >= minSalary && jobSalary <= maxSalary;
+            } else {
+                return jobSalary >= minSalary;
+            }
         });
     }
 
     return filteredJobs;
 };
-
 export const {
     setAllJobs,
     setSingleJob,

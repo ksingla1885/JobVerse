@@ -24,8 +24,14 @@ const persistConfig = {
     storage
 }
 
+const authPersistConfig = {
+    key: 'auth',
+    storage: storage,
+    blacklist: ['loading']
+}
+
 const rootReducer = combineReducers({
-    auth:authSlice,
+    auth: persistReducer(authPersistConfig, authSlice),
     job:jobSlice,
     company: companySlice,
     application:applicationSlice

@@ -22,12 +22,13 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         phoneNumber: user?.phoneNumber || '',
         bio: user?.profile?.bio || '',
         skills: user?.profile?.skills ? user.profile.skills.join(', ') : '',
-        file: user?.profile?.resume || ''
+        file: user?.profile?.resume || '',
+        profilePhoto: null
     });
 
     // Debug initial state
-    console.log('UpdateProfileDialog - Initial input state:', input);
-    console.log('UpdateProfileDialog - Current user skills:', user?.profile?.skills);
+    // console.log('UpdateProfileDialog - Initial input state:', input);
+    // console.log('UpdateProfileDialog - Current user skills:', user?.profile?.skills);
 
     // Watch for dialog open and user changes
     useEffect(() => {
@@ -47,11 +48,16 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         setInput({...input, file})
     }
 
+    const profilePhotoChangeHandler = (e) => {
+        const file = e.target.files?.[0];
+        setInput({...input, profilePhoto: file})
+    }
+
     const submitHandler =  async (e) => {
         e.preventDefault();
 
         // Debug logging
-        console.log('Submitting form with data:', input);
+        // console.log('Submitting form with data:', input);
 
         // Let's call API
         const formData = new FormData();
@@ -63,13 +69,19 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         // Handle skills properly - convert to array if it's a string
         if (input.skills) {
             const skillsArray = input.skills.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0);
-            console.log('Original skills string:', input.skills);
-            console.log('Converted skills array:', skillsArray);
-            formData.append("skills", JSON.stringify(skillsArray));
+            // console.log('Original skills string:', input.skills);
+            // console.log('Converted skills array:', skillsArray);
+            skillsArray.forEach(skill => {
+                formData.append('skills[]', skill);
+            });
         }
 
         if(input.file){
             formData.append("file", input.file);
+        }
+
+        if(input.profilePhoto){
+            formData.append("profilePhoto", input.profilePhoto);
         }
 
         try {
@@ -86,20 +98,20 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
             console.log('API Response:', res.data);
 
             if(res.data.success){
-                console.log('Updating Redux state...');
-                console.log('New user data:', res.data.user);
-                console.log('New user skills:', res.data.user?.profile?.skills);
+                // console.log('Updating Redux state...');
+                // console.log('New user data:', res.data.user);
+                // console.log('New user skills:', res.data.user?.profile?.skills);
                 dispatch(setUser(res.data.user));
-                console.log('Redux state updated, showing success toast...');
+                // console.log('Redux state updated, showing success toast...');
                 toast.success(res.data.message);
 
                 // Small delay to ensure Redux state updates before closing dialog
                 setTimeout(() => {
-                    console.log('Closing dialog...');
+                    // console.log('Closing dialog...');
                     setOpen(false);
                 }, 100);
             } else {
-                console.error('API returned success=false:', res.data);
+                // console.error('API returned success=false:', res.data);
                 toast.error(res.data.message || 'Update failed');
             }
         } catch (error) {
@@ -114,7 +126,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                 toast.error('Update failed. Please try again.');
             }
         } finally{
-            console.log('Resetting loading state...');
+            // console.log('Resetting loading state...');
             setLoading(false);
         }
     }
@@ -228,6 +240,31 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                     className="h-9 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-50 file:text-gray-700"
                                     onChange={fileChangeHandler}
                                 />
+                            </div>
+
+                            {/* Profile Picture Upload */}
+                            <div className="space-y-1">
+                                <Label htmlFor="profilePhoto" className="text-sm font-medium text-gray-700">
+                                    Profile Picture
+                                </Label>
+                                <Input
+                                    id="profilePhoto"
+                                    name="profilePhoto"
+                                    type="file"
+                                    accept="image/*"
+                                    className="h-9 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-50 file:text-gray-700"
+                                    onChange={profilePhotoChangeHandler}
+                                />
+                                {user?.profile?.profilePhoto && (
+                                    <div className="mt-2">
+                                        <p className="text-xs text-gray-500 mb-1">Current Profile Picture:</p>
+                                        <img
+                                            src={user.profile.profilePhoto}
+                                            alt="Current profile"
+                                            className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             <DialogFooter className="mt-4 pt-3 border-t border-gray-100 flex gap-2">

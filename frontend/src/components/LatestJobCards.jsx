@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Badge } from './ui/badge';
 import { MapPin, Clock, DollarSign, Users, BookmarkPlus, ExternalLink } from 'lucide-react';
 
 const LatestJobCards = ({ job }) => {
+  const navigate = useNavigate();
   const formatSalary = (salary) => {
     if (!salary) return 'Competitive';
     return `₹${salary} LPA`;
@@ -109,7 +111,7 @@ const LatestJobCards = ({ job }) => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <button className="text-blue-600 hover:text-blue-700 text-xs sm:text-sm font-medium hover:underline transition-colors">
+            <button onClick={() => navigate(`/description/${job?._id}`)} className="text-blue-600 hover:text-blue-700 text-xs sm:text-sm font-medium hover:underline transition-colors">
               View Details
             </button>
             <ExternalLink className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-gray-400 flex-shrink-0" />
@@ -123,4 +125,4 @@ const LatestJobCards = ({ job }) => {
   )
 }
 
-export default LatestJobCards
+export default memo(LatestJobCards)

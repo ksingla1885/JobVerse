@@ -17,7 +17,7 @@ import { setSingleJob } from '../redux/jobSlice';    // action to set single job
 const JobDescription = () => {
   // get singleJob and user from redux store
   const singleJob = useSelector((store) => store.job.singleJob);
-  console.log("Single Job : ",singleJob);
+  // console.log("Single Job : ",singleJob);
   const user = useSelector((store) => store.auth.user);
 
   // local state for applied status; always synced with store via effect below

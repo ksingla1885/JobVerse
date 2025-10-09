@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import Navbar from './shared/Navbar';
 import HeroSection from './HeroSection';
 import CategoryCarousel from './CategoryCarousel';
-import LatestJobs from './LatestJobs';
+import LatestJobsContainer from './LatestJobsContainer';
 import Footer from '../components/shared/Footer';
 import useGetAllJobs from '@/hooks/useGetAllJobs';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Button } from './ui/button';
 
 const Home = () => {
 
@@ -26,7 +27,15 @@ const Home = () => {
       <Navbar/>
       <HeroSection/>
       <CategoryCarousel/>
-      <LatestJobs/>
+      <LatestJobsContainer/>
+      <div className="text-center -mt-8 mb-16">
+        <Button 
+          onClick={() => navigate('/jobs')}
+          className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:shadow-lg transition-transform transform hover:scale-105"
+        >
+          View All Jobs
+        </Button>
+      </div>
       <Footer/>
     </div>
   )

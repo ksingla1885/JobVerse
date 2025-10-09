@@ -138,12 +138,22 @@ export const logout = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
-        const file = req.file;
+        const resumeFile = req.files?.file?.[0]; // Resume file
+        const profilePhotoFile = req.files?.profilePhoto?.[0]; // Profile photo file
 
         let cloudResponse;
-        if (file) {
-            const fileUri = getDataUri(file); // ✅ CHANGED: added getDataUri call inside file check
-            cloudResponse = await cloudinary.uploader.upload(fileUri.content); // ✅ CHANGED: use fileUri.content
+        let profilePhotoResponse;
+
+        // Handle resume upload
+        if (resumeFile) {
+            const fileUri = getDataUri(resumeFile);
+            cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        }
+
+        // Handle profile photo upload
+        if (profilePhotoFile) {
+            const fileUri = getDataUri(profilePhotoFile);
+            profilePhotoResponse = await cloudinary.uploader.upload(fileUri.content);
         }
 
         let skillsArray;
@@ -167,9 +177,15 @@ export const updateProfile = async (req, res) => {
         if (bio) user.profile.bio = bio;
         if (skills) user.profile.skills = skillsArray;
 
+        // Update resume if uploaded
         if (cloudResponse) {
             user.profile.resume = cloudResponse.secure_url;
-            user.profile.resumeOriginalName = file.originalname;
+            user.profile.resumeOriginalName = resumeFile.originalname;
+        }
+
+        // Update profile photo if uploaded
+        if (profilePhotoResponse) {
+            user.profile.profilePhoto = profilePhotoResponse.secure_url;
         }
 
         await user.save();

@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../shared/Navbar';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
-import { RadioGroup } from "@/components/ui/radio-group";
 import { Button } from '../ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../App.css';
@@ -20,6 +19,11 @@ const Signup = () => {
   const { loading } = useSelector(store => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Reset loading state on component mount to ensure it's not stuck
+    dispatch(setLoading(false));
+  }, [dispatch]);
 
   const [input, setInput] = useState({
     fullname: "",
@@ -186,9 +190,10 @@ const Signup = () => {
                 {/* Role Selection */}
                 <div className="space-y-3">
                   <Label className="text-sm font-medium text-gray-700">I want to:</Label>
-                  <RadioGroup className="flex items-center gap-6">
+                  <div className="flex items-center gap-6">
                     <div className="flex items-center space-x-2">
                       <input
+                        id="student"
                         className="w-4 h-4 text-blue-600 focus:ring-blue-500"
                         type="radio"
                         name="role"
@@ -204,6 +209,7 @@ const Signup = () => {
 
                     <div className="flex items-center space-x-2">
                       <input
+                        id="recruiter"
                         className="w-4 h-4 text-blue-600 focus:ring-blue-500"
                         type="radio"
                         name="role"
@@ -216,7 +222,7 @@ const Signup = () => {
                         <span className="text-sm text-gray-700">Hire Talent</span>
                       </Label>
                     </div>
-                  </RadioGroup>
+                  </div>
                 </div>
 
                 {/* Profile Image Upload */}
