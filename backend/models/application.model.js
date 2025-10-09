@@ -18,6 +18,6 @@ const applicationSchema  = new mongoose.Schema({
         enum: ['pending', 'accepted', 'rejected'],
         default:"pending"
     }
-}, {timeseries:true})
+}, {timestamps:true})
 
 export const Application = mongoose.model("Application", applicationSchema);
