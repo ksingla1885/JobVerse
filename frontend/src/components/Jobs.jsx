@@ -1,16 +1,38 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './shared/Navbar';
 import FilterCard from './FilterCard';
 import Job from './LatestJobs';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { searchJobByText } from '@/redux/jobSlice';
 import useGetAllJobs from '../hooks/useGetAllJobs';
+import { Search, X } from 'lucide-react';
+import { Input } from './ui/input';
 
 const Jobs = () => {
     useGetAllJobs(); // Load jobs when component mounts
-    const { filteredJobs, allJobs } = useSelector(store => store.job);
+    const { filteredJobs, allJobs, searchJobByText: searchText } = useSelector(store => store.job);
+    const dispatch = useDispatch();
+
     // Show filtered jobs if filters have been applied, otherwise show all jobs
     const jobsToDisplay = filteredJobs !== undefined ? filteredJobs : allJobs;
+
+    // Local search state for immediate UI feedback
+    const [localSearchText, setLocalSearchText] = useState(searchText);
+
+    // Debounced search handler
+    const handleSearch = (value) => {
+        setLocalSearchText(value);
+        // Debounce search to avoid too many dispatches
+        setTimeout(() => {
+            dispatch(searchJobByText(value));
+        }, 300);
+    };
+
+    const clearSearch = () => {
+        setLocalSearchText("");
+        dispatch(searchJobByText(""));
+    };
 
     // Debug logging (remove in production)
     console.log('Jobs Debug:', {

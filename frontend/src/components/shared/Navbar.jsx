@@ -189,7 +189,7 @@ const Navbar = () => {
                         </>
                       ) : (
                         <>
-                          <Link to="/" className="block px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                          <Link to="/home" className="block px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                             Home
                           </Link>
                           <Link to="/jobs" className="block px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">

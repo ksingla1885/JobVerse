@@ -1,8 +1,11 @@
 /* eslint-disable no-unused-vars */
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
-import './App.css';
+import { Suspense } from 'react';
+import Home from './components/Home';
+import Jobs from './components/Jobs';
+import Profile from './components/Profile';
+import PostJob from './components/admin/PostJob';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import Browse from './components/Browse';
@@ -13,33 +16,55 @@ import CreateCompany from './components/admin/CompanyCreate';
 import CreateJobs from './components/admin/PostJob';
 import PostedJobs from './components/admin/AdminJobs';
 import Applicants from './components/admin/Applicants';
-
-const Home = lazy(() => import('./components/Home'));
-const Jobs = lazy(() => import('./components/Jobs'));
-const Profile = lazy(() => import('./components/Profile'));
-const PostJob = lazy(() => import('./components/admin/PostJob'));
-const CompanySetup = lazy(() => import('./components/admin/CompanySetup'));
-const AdminJobs = lazy(() => import('./components/admin/AdminJobs'));
-
-
+import CompanySetup from './components/admin/CompanySetup';
+import AdminJobs from './components/admin/AdminJobs';
+import LandingPage from './components/LandingPage';
+import ProtectedRoute from './components/AuthGuard';
 
 function App() {
   return (
-    <>
-      
-     <div>
+    <div>
       <Router>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            {/* Public routes - accessible without authentication */}
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/browse" element={<Browse />} />
-            <Route path="/jobs" element={<Jobs />} />
-            <Route path="/description/:id" element={<JobDescription />} />
-            <Route path="/profile" element={<Profile />} />
-            {/* admin routes */}
-            <Route path="/admin" element={<AdminDashboard />} >
+
+            {/* Student routes - require authentication and student role */}
+            <Route path="/home" element={
+              <ProtectedRoute allowedRoles={['student']} requireAuth={true}>
+                <Home />
+              </ProtectedRoute>
+            } />
+            <Route path="/jobs" element={
+              <ProtectedRoute allowedRoles={['student']} requireAuth={true}>
+                <Jobs />
+              </ProtectedRoute>
+            } />
+            <Route path="/browse" element={
+              <ProtectedRoute allowedRoles={['student']} requireAuth={true}>
+                <Browse />
+              </ProtectedRoute>
+            } />
+            <Route path="/description/:id" element={
+              <ProtectedRoute allowedRoles={['student']} requireAuth={true}>
+                <JobDescription />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute allowedRoles={['student']} requireAuth={true}>
+                <Profile />
+              </ProtectedRoute>
+            } />
+
+            {/* Admin/Recruiter routes - require authentication and recruiter role */}
+            <Route path="/admin" element={
+              <ProtectedRoute allowedRoles={['recruiter']} requireAuth={true}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }>
               <Route path="companies" element={<Companies />} />
               <Route path="create-company" element={<CreateCompany />} />
               <Route path="create-job" element={<CreateJobs />} />
@@ -53,11 +78,8 @@ function App() {
           </Routes>
         </Suspense>
       </Router>
-     </div>
-    
-    </>
-  )
+    </div>
+  );
 }
 
-
-export default App
+export default App;
