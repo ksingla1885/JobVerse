@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Navbar from '../shared/Navbar'
+// import Navbar from '../shared/Navbar' // Removed - using main navbar instead
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -117,7 +117,7 @@ const PostJob = () => {
 
     return (
         <div>
-            <Navbar />
+            {/* <Navbar /> */} {/* Removed - using main navbar instead */}
             <div className="flex items-center justify-center w-screen my-5">
                 <form onSubmit={submitHandler} className="p-8 max-w-4xl border-gray-200 shadow-lg rounded-md">
                     <div className="grid grid-cols-2 gap-2">

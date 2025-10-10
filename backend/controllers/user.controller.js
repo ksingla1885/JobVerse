@@ -158,7 +158,13 @@ export const updateProfile = async (req, res) => {
 
         let skillsArray;
         if (skills) {
-            skillsArray = skills.split(",");
+            if (Array.isArray(skills)) {
+                skillsArray = skills;
+            } else if (typeof skills === 'string') {
+                skillsArray = skills.split(",");
+            } else {
+                skillsArray = [];
+            }
         }
 
         const userId = req.id;

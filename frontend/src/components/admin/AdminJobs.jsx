@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import Navbar from '../shared/Navbar';
+// import Navbar from '../shared/Navbar'; // Removed - using main navbar instead
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ const AdminJobs = () => {
 
     return (
         <div>
-            <Navbar />
+            {/* <Navbar /> */} {/* Removed - using main navbar instead */}
 
             <div className="max-w-6-xl mx-auto my-10">
                 

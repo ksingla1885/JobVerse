@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Navbar from '../shared/Navbar'
+// import Navbar from '../shared/Navbar' // Removed - using main navbar instead
 import ApplicantsTable from './ApplicantsTable'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
@@ -26,7 +26,7 @@ const Applicants = () => {
   return (
     <div>
       
-      <Navbar />
+      {/* <Navbar /> */} {/* Removed - using main navbar instead */}
 
       <div className="max-w-7xl mx-auto">
         <h2 className="font-bold text-xl my-5">Applicants {applicants?.applications?.length} </h2>

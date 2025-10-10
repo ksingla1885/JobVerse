@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import Navbar from '../shared/Navbar';
+// import Navbar from '../shared/Navbar'; // Removed - using main navbar instead
 import { Button } from '../ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Input } from '../ui/input';
@@ -91,7 +91,7 @@ const CompanySetup = () => {
 
     return (
         <div>
-            <Navbar />
+            {/* <Navbar /> */} {/* Removed - using main navbar instead */}
             <div className="max-w-xl mx-auto my-10">
                 <form onSubmit={submitHandler}>
                     <div className="flex items-center gap-5 p-8">

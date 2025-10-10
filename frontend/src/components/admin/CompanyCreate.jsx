@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import Navbar from '../shared/Navbar';
+// import Navbar from '../shared/Navbar'; // Removed - using main navbar instead
 import { Label } from '../ui/label';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -43,7 +43,7 @@ const CompanyCreate = () => {
     }
     return (
         <div>
-            <Navbar />
+            {/* <Navbar /> */} {/* Removed - using main navbar instead */}
 
             <div className="max-w-4xl mx-auto">
 

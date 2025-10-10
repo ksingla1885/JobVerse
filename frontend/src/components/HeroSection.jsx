@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Search, TrendingUp, Users, Star } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setSearchedQuery } from '@/redux/jobSlice';
 
 const HeroSection = () => {
+
+  const [query, setQuery] = useState();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+  const searchJobHandler = () => {
+    dispatch(setSearchedQuery(query));
+    navigate("/browse");
+  }
+
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated background */}
@@ -50,10 +65,11 @@ const HeroSection = () => {
                     <input
                       type="text"
                       placeholder="Search for jobs, companies, or skills..."
+                      onChange={(e) => setQuery(e.target.value)}
                       className="w-full px-4 py-3 text-gray-700 placeholder-gray-500 focus:outline-none text-base"
                     />
                   </div>
-                  <Button className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-3">
+                  <Button onClick={searchJobHandler} className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-3">
                     <Search className="h-5 w-5 mr-2" />
                     Search Jobs
                   </Button>

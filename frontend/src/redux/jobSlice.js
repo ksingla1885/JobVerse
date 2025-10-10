@@ -13,7 +13,8 @@ const jobSlice = createSlice({
             salary: ""
         },
         filteredJobs: undefined, // Start as undefined, not empty array
-        allAppliedJobs: []
+        allAppliedJobs: [],
+        searchedQuery:""
     },
     reducers:{
         setAllJobs: (state, action) => {
@@ -70,6 +71,9 @@ const jobSlice = createSlice({
         },
         setAllAppliedJobs: (state, action) => {
             state.allAppliedJobs = action.payload;
+        },
+        setSearchedQuery: (state, action) => {
+            state.searchedQuery = action.payload;
         }
     }
 });
@@ -141,7 +145,8 @@ export const {
     searchJobByText,
     setFilter,
     clearFilters,
-    setAllAppliedJobs
+    setAllAppliedJobs,
+    setSearchedQuery
 } = jobSlice.actions;
 
 export default jobSlice.reducer;
