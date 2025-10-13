@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { RadioGroup, RadioGroupItem} from './ui/radio-group';
 import { Label } from './ui/label';
 import { Button } from './ui/button';
-import { Filter, ChevronDown, MapPin, Briefcase, DollarSign } from 'lucide-react';
+import { Filter, ChevronDown, MapPin, Briefcase, DollarSign, Home } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter, clearFilters } from '../redux/jobSlice';
 
@@ -22,6 +22,11 @@ const FilterData = [
     filterType: "Salary",
     array: ["0-3 LPA", "3-6 LPA", "6-10 LPA", "10-15 LPA", "15+ LPA"],
     icon: DollarSign
+  },
+  {
+    filterType: "Work Type",
+    array: ["Remote", "On-site", "Hybrid"],
+    icon: Home
   }
 ];
 
@@ -30,7 +35,8 @@ const FilterCard = () => {
   const [selectedFilters, setSelectedFilters] = useState({
     location: "",
     industry: "",
-    salary: ""
+    salary: "",
+    workType: ""
   });
   const dispatch = useDispatch();
   const { filters } = useSelector(store => store.job);
@@ -62,7 +68,8 @@ const FilterCard = () => {
     setSelectedFilters({
       location: "",
       industry: "",
-      salary: ""
+      salary: "",
+      workType: ""
     });
     dispatch(clearFilters());
   };

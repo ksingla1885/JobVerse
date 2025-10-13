@@ -6,6 +6,9 @@ import Job from './LatestJobs';
 import { useSelector, useDispatch } from 'react-redux';
 import { searchJobByText } from '@/redux/jobSlice';
 import useGetAllJobs from '../hooks/useGetAllJobs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 import { Search, X } from 'lucide-react';
 import { Input } from './ui/input';
 
@@ -34,22 +37,41 @@ const Jobs = () => {
         dispatch(searchJobByText(""));
     };
 
-    // Debug logging (remove in production)
-    console.log('Jobs Debug:', {
-        filteredJobsCount: filteredJobs?.length || 0,
-        allJobsCount: allJobs?.length || 0,
-        jobsToDisplayCount: jobsToDisplay?.length || 0,
-        filteredJobs: filteredJobs,
-        sampleJob: jobsToDisplay?.[0]
-    });
-
     return (
         <div className="min-h-screen bg-gray-50">
             <Navbar />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Find Jobs</h1>
+                    <p className="text-gray-600">Discover and apply to the latest job opportunities</p>
+                </div>
 
+                {/* Search Bar */}
+                <Card className="bg-white shadow-sm border mb-6">
+                    <CardContent className="pt-6">
+                        <div className="flex flex-col md:flex-row gap-4 items-center">
+                            <div className="flex-1 relative">
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                <Input
+                                    placeholder="Search jobs..."
+                                    value={localSearchText}
+                                    onChange={(e) => handleSearch(e.target.value)}
+                                    className="pl-10 bg-white"
+                                />
+                            </div>
+                            {localSearchText && (
+                                <Button variant="outline" size="sm" onClick={clearSearch}>
+                                    <X className="h-4 w-4 mr-2" />
+                                    Clear
+                                </Button>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
                     {/* Filter Sidebar */}
                     <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
                         <div className="sticky top-20">
@@ -60,17 +82,19 @@ const Jobs = () => {
                     {/* Job Listings */}
                     <div className="flex-1">
                         {jobsToDisplay.length <= 0 ? (
-                            <div className="flex items-center justify-center h-96">
-                                <div className="text-center">
-                                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                        </svg>
+                            <Card className="bg-white shadow-sm border">
+                                <CardContent className="flex items-center justify-center h-64">
+                                    <div className="text-center">
+                                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+                                        <p className="text-gray-500">Try adjusting your filters or search criteria</p>
                                     </div>
-                                    <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-                                    <p className="text-gray-500">Try adjusting your filters or search criteria</p>
-                                </div>
-                            </div>
+                                </CardContent>
+                            </Card>
                         ) : (
                             <div className="space-y-6">
                                 {/* Results Header */}

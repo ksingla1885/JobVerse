@@ -5,11 +5,13 @@ import { Label } from '../ui/label';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import axios from 'axios';
 import { COMPANY_API_END_POINT } from '@/utils/constant';
 import { toast } from 'sonner';
 import { useDispatch } from 'react-redux';
 import { setSingleCompany } from '@/redux/companySlice';
+import { Building2, ArrowLeft } from 'lucide-react';
 
 const CompanyCreate = () => {
     const navigate = useNavigate();
@@ -42,33 +44,61 @@ const CompanyCreate = () => {
         }
     }
     return (
-        <div>
-            {/* <Navbar /> */} {/* Removed - using main navbar instead */}
-
-            <div className="max-w-4xl mx-auto">
-
-                <div className="my-10">
-                    <h2 className="font-bold text-2xl">Your Company Name</h2>
-                    <p className="text-gray-500">What would you like to give your company name, you can change this later</p>
-
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold">Create Company</h1>
+                    <p className="text-gray-600">Add a new company to your platform</p>
                 </div>
-
-                <Label>Company Name</Label>
-                <Input
-                    type="text"
-                    className="my-2"
-                    placeholder="Microsoft, Google, etc.."
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                />
-
-                <div className="flex items-center gap-2 my-10">
-                    <Button variant="outline" onClick={() => navigate("/admin/companies")}> Cancel </Button>
-                    <Button onClick={registerNewCompany}> Continue </Button>
-                </div>
-
             </div>
 
+            {/* Company Creation Form */}
+            <Card className="bg-white shadow-sm border">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Building2 className="h-5 w-5" />
+                        Company Information
+                    </CardTitle>
+                    <CardDescription>
+                        Enter the company name to get started. You can add more details later.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                        <Label htmlFor="companyName">Company Name *</Label>
+                        <Input
+                            id="companyName"
+                            type="text"
+                            placeholder="e.g., Microsoft, Google, TechCorp Inc."
+                            value={companyName}
+                            onChange={(e) => setCompanyName(e.target.value)}
+                            className="bg-white"
+                        />
+                        <p className="text-sm text-gray-500">
+                            Choose a clear, professional name for your company
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-3 pt-4">
+                        <Button
+                            variant="outline"
+                            onClick={() => navigate("/admin/companies")}
+                            className="flex items-center gap-2"
+                        >
+                            <ArrowLeft className="h-4 w-4" />
+                            Back to Companies
+                        </Button>
+                        <Button
+                            onClick={registerNewCompany}
+                            className="bg-blue-600 hover:bg-blue-700"
+                            disabled={!companyName.trim()}
+                        >
+                            Create Company
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     )
 }

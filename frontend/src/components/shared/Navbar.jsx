@@ -41,7 +41,7 @@ const Navbar = () => {
           {/* Logo Section */}
           <div className="flex items-center space-x-2">
             <div className="flex-shrink-0">
-              <Link to="/" className="flex items-center space-x-2 group">
+              <Link to={user?.role === 'recruiter' ? "/admin" : "/"} className="flex items-center space-x-2 group">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                   <Briefcase className="h-6 w-6 text-white" />
                 </div>

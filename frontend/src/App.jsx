@@ -17,9 +17,11 @@ import CreateJobs from './components/admin/PostJob';
 import PostedJobs from './components/admin/AdminJobs';
 import Applicants from './components/admin/Applicants';
 import CompanySetup from './components/admin/CompanySetup';
-import AdminJobs from './components/admin/AdminJobs';
+import AllApplicants from './components/admin/AllApplicants';
 import LandingPage from './components/LandingPage';
 import ProtectedRoute from './components/AuthGuard';
+import AdminJobs from './components/admin/AdminJobs';
+import AdminHome from './components/admin/AdminHome';
 
 function App() {
   return (
@@ -65,6 +67,7 @@ function App() {
                 <AdminDashboard />
               </ProtectedRoute>
             }>
+              <Route index element={<AdminHome />} />
               <Route path="companies" element={<Companies />} />
               <Route path="create-company" element={<CreateCompany />} />
               <Route path="create-job" element={<CreateJobs />} />
@@ -74,6 +77,7 @@ function App() {
               <Route path="jobs" element={<AdminJobs />} />
               <Route path="jobs/create" element={<PostJob />} />
               <Route path="jobs/:id/applicants" element={<Applicants />} />
+              <Route path="all-applicants" element={<AllApplicants />} />
             </Route>
           </Routes>
         </Suspense>

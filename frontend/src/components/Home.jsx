@@ -12,8 +12,11 @@ import {
     DollarSign,
     Building,
     Briefcase,
-    Award
+    Award,
+    Badge
 } from 'lucide-react';
+import useGetAllJobs from '@/hooks/useGetAllJobs';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 const Home = () => {
     const { user } = useSelector(store => store.auth);

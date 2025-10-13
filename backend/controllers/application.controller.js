@@ -125,6 +125,35 @@ export const getApplicants = async(req, res) => {
 
 
 
+// ADMIN FUNCTION: Get all applications across all jobs
+export const getAllApplications = async(req, res) => {
+    try {
+        const applications = await Application.find({})
+            .populate({
+                path: "job",
+                populate: {
+                    path: "company"
+                }
+            })
+            .populate("applicant")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            applications,
+            success: true
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+}
+
+
+
 export const updateStatus = async(req, res) => {
     try {
         const {status} = req.body;

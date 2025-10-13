@@ -10,7 +10,8 @@ const jobSlice = createSlice({
         filters: {
             location: "",
             industry: "",
-            salary: ""
+            salary: "",
+            workType: ""
         },
         filteredJobs: undefined, // Start as undefined, not empty array
         allAppliedJobs: [],
@@ -39,7 +40,8 @@ const jobSlice = createSlice({
                 state.filters = {
                     location: "",
                     industry: "",
-                    salary: ""
+                    salary: "",
+                    workType: ""
                 };
             }
             // Apply filters when search text changes
@@ -52,7 +54,8 @@ const jobSlice = createSlice({
                 state.filters = {
                     location: "",
                     industry: "",
-                    salary: ""
+                    salary: "",
+                    workType: ""
                 };
             }
             state.filters[filterType] = value;
@@ -63,7 +66,8 @@ const jobSlice = createSlice({
             state.filters = {
                 location: "",
                 industry: "",
-                salary: ""
+                salary: "",
+                workType: ""
             };
             state.searchJobByText = "";
             // Reset filteredJobs when filters are cleared
@@ -85,7 +89,8 @@ const applyFilters = (jobs, filters, searchText) => {
         filters = {
             location: "",
             industry: "",
-            salary: ""
+            salary: "",
+            workType: ""
         };
     }
 
@@ -132,6 +137,27 @@ const applyFilters = (jobs, filters, searchText) => {
                 return jobSalary >= minSalary && jobSalary <= maxSalary;
             } else {
                 return jobSalary >= minSalary;
+            }
+        });
+    }
+
+    // Apply work type filter
+    if (filters.workType) {
+        filteredJobs = filteredJobs.filter(job => {
+            const jobWorkType = (job.location || '').toLowerCase() + ' ' + (job.jobType || '').toLowerCase();
+            switch (filters.workType) {
+                case "Remote":
+                    return jobWorkType.includes('remote') ||
+                           jobWorkType.includes('work from home') ||
+                           jobWorkType.includes('wfh');
+                case "On-site":
+                    return !jobWorkType.includes('remote') &&
+                           !jobWorkType.includes('work from home') &&
+                           !jobWorkType.includes('wfh');
+                case "Hybrid":
+                    return jobWorkType.includes('hybrid');
+                default:
+                    return true;
             }
         });
     }

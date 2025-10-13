@@ -48,7 +48,14 @@ const Login = () => {
       });
       if (res.data.success) {
         dispatch(setUser(res.data.user));
-        navigate("/");
+        // Redirect based on user role
+        if (res.data.user.role === 'recruiter') {
+          navigate("/admin");
+        } else if (res.data.user.role === 'student') {
+          navigate("/home");
+        } else {
+          navigate("/");
+        }
         toast.success(res.data.message);
       }
     } catch (error) {

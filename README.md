@@ -128,23 +128,224 @@ Security: bcrypt, CORS, Helmet, JWT
 
 *JobVerse represents a complete, production-ready job portal solution that demonstrates modern web development best practices, clean architecture, and exceptional user experience design.*
 
-## Code Optimization & Normalization
+## 📋 Table of Contents
 
-This project has been optimized by applying principles analogous to database normalization to the frontend codebase. This approach enhances maintainability, reduces redundancy, and improves the overall code structure.
+- [Project Overview](#project-overview)
+- [Features](#-key-features)
+- [Technical Architecture](#-technical-architecture)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [API Documentation](#api-documentation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-### 1. First Normal Form (1NF): Atomic Components
+## 🚀 Installation
 
-- **Principle**: Just as 1NF eliminates repeating groups in a database, we break down large, monolithic components into smaller, single-purpose, "atomic" components.
-- **Benefit**: This improves reusability and makes components easier to understand, test, and maintain.
+### Prerequisites
 
-### 2. Second Normal Form (2NF): Separation of Concerns
+- **Node.js** (v16 or higher)
+- **MongoDB** (v4.4 or higher)
+- **npm** or **yarn** package manager
 
-- **Principle**: 2NF requires that all non-key attributes be fully dependent on the primary key. In our frontend, this translates to separating business logic and data fetching from UI components.
-- **Implementation**: We extract data-fetching logic, API calls, and complex state management into custom hooks.
-- **Benefit**: UI components become purely presentational, while the logic becomes reusable and easier to test independently.
+### Setup Instructions
 
-### 3. Third Normal Form (3NF): Centralized State Management
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/jobverse.git
+   cd jobverse
+   ```
 
-- **Principle**: 3NF removes transitive dependencies. In our application, this means avoiding prop drilling and ensuring that state is managed in a single, centralized location when it's shared across multiple components.
-- **Implementation**: We use Redux for global state management, ensuring that components have direct access to the state they need without unnecessary data passing through intermediate components.
-- **Benefit**: This simplifies data flow, makes state changes more predictable, and improves application performance.
+2. **Install dependencies**
+   ```bash
+   # Install backend dependencies
+   cd backend
+   npm install
+
+   # Install frontend dependencies
+   cd ../frontend
+   npm install
+   ```
+
+3. **Environment Configuration**
+
+   **Backend (.env)**
+   ```env
+   PORT=8000
+   MONGO_URI=mongodb://localhost:27017/jobverse
+   JWT_SECRET=your_jwt_secret_key
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   EMAIL_USER=your_email@gmail.com
+   EMAIL_PASS=your_email_password
+   ```
+
+   **Frontend (.env)**
+   ```env
+   VITE_API_BASE_URL=http://localhost:8000/api/v1
+   ```
+
+4. **Start MongoDB**
+   ```bash
+   # Make sure MongoDB is running on your system
+   mongod
+   ```
+
+5. **Run the application**
+
+   **Terminal 1 - Backend**
+   ```bash
+   cd backend
+   npm run dev
+   ```
+
+   **Terminal 2 - Frontend**
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+6. **Access the application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8000
+
+## 📖 Usage
+
+### For Students (Job Seekers)
+
+1. **Sign Up/Login** - Create an account or login with existing credentials
+2. **Complete Profile** - Fill in your personal and professional information
+3. **Browse Jobs** - Use the advanced search and filtering system
+4. **Apply for Jobs** - Submit applications to interesting positions
+5. **Track Applications** - Monitor the status of your job applications
+
+### For Recruiters (Employers)
+
+1. **Register as Recruiter** - Sign up with your company details
+2. **Create Company Profile** - Set up your company information
+3. **Post Job Openings** - Create detailed job listings
+4. **Manage Applications** - Review and manage incoming applications
+5. **Update Job Status** - Keep candidates informed about their application status
+
+### User Roles & Permissions
+
+| **Role** | **Dashboard Access** | **Job Management** | **Application Tracking** |
+|----------|---------------------|-------------------|-------------------------|
+| **Student** | ✅ Personal Dashboard | ❌ Post Jobs | ✅ Track Applications |
+| **Recruiter** | ✅ Admin Dashboard | ✅ Post/Edit Jobs | ✅ Manage Applications |
+
+## 📁 Project Structure
+
+```
+jobverse/
+├── backend/                 # Node.js/Express.js server
+│   ├── controllers/         # Route handlers
+│   ├── middleware/          # Custom middleware
+│   ├── models/             # MongoDB schemas
+│   ├── routes/             # API endpoints
+│   ├── utils/              # Utility functions
+│   └── server.js           # Entry point
+├── frontend/               # React.js application
+│   ├── public/             # Static assets
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   │   ├── admin/      # Admin/Recruiter components
+│   │   │   ├── shared/     # Shared components
+│   │   │   └── ui/         # UI components
+│   │   ├── hooks/          # Custom React hooks
+│   │   ├── pages/          # Page components
+│   │   ├── redux/          # Redux store
+│   │   ├── utils/          # Utility functions
+│   │   └── App.jsx         # Main component
+│   └── package.json
+├── .gitignore              # Git ignore rules
+└── README.md              # Project documentation
+```
+
+## 🔌 API Documentation
+
+### Authentication Endpoints
+
+| **Method** | **Endpoint** | **Description** |
+|------------|-------------|-----------------|
+| POST | `/api/v1/auth/signup` | User registration |
+| POST | `/api/v1/auth/login` | User login |
+| POST | `/api/v1/auth/logout` | User logout |
+| GET | `/api/v1/auth/profile` | Get user profile |
+
+### Job Endpoints
+
+| **Method** | **Endpoint** | **Description** |
+|------------|-------------|-----------------|
+| GET | `/api/v1/jobs` | Get all jobs |
+| POST | `/api/v1/jobs/post` | Create new job (Recruiters only) |
+| GET | `/api/v1/jobs/:id` | Get specific job |
+| PUT | `/api/v1/jobs/:id` | Update job (Recruiters only) |
+| DELETE | `/api/v1/jobs/:id` | Delete job (Recruiters only) |
+
+### Application Endpoints
+
+| **Method** | **Endpoint** | **Description** |
+|------------|-------------|-----------------|
+| POST | `/api/v1/applications/apply/:jobId` | Apply for job |
+| GET | `/api/v1/applications` | Get user applications |
+| GET | `/api/v1/applications/:jobId/applicants` | Get job applicants (Recruiters only) |
+
+### Company Endpoints
+
+| **Method** | **Endpoint** | **Description** |
+|------------|-------------|-----------------|
+| POST | `/api/v1/companies/register` | Register company (Recruiters only) |
+| GET | `/api/v1/companies` | Get all companies |
+| GET | `/api/v1/companies/:id` | Get specific company |
+
+## 🤝 Contributing
+
+We welcome contributions to JobVerse! Here's how you can help:
+
+### Getting Started
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Make your changes**
+4. **Test thoroughly**
+5. **Commit your changes**: `git commit -m 'Add amazing feature'`
+6. **Push to the branch**: `git push origin feature/amazing-feature`
+7. **Open a Pull Request**
+
+### Development Guidelines
+
+- **Code Style**: Follow ESLint configuration
+- **Commits**: Use conventional commit messages
+- **Testing**: Write tests for new features
+- **Documentation**: Update README for significant changes
+- **Branch Naming**: Use descriptive branch names
+
+### Reporting Bugs
+
+1. **Check existing issues** to avoid duplicates
+2. **Create a new issue** with detailed description
+3. **Include steps to reproduce**
+4. **Add screenshots** if applicable
+5. **Specify environment** (OS, browser, versions)
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+
+**Ketan Singla** - Project Creator & Developer
+
+- **Email**: ketansingla7988@gmail.com
+- **LinkedIn**: [linkedin.com/in/ketan-singla](https://linkedin.com/in/https://www.linkedin.com/in/ketan-kumar-521249279/)
+- **GitHub**: [github.com/ksingla1885](https://github.com/ksingla1885)
+<!-- - **Portfolio**: [ketansingla.dev](https://ketansingla.dev) -->
+
+---
+
+**⭐ If you found this project helpful, please give it a star!**
+
+*Built with ❤️ by Ketan Singla*
