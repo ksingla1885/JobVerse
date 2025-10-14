@@ -2,26 +2,26 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Suspense } from 'react';
-import Home from './components/Home';
-import Jobs from './components/Jobs';
-import Profile from './components/Profile';
-import PostJob from './components/admin/PostJob';
-import Login from './components/auth/Login';
-import Signup from './components/auth/Signup';
-import Browse from './components/Browse';
-import JobDescription from './components/JobDescription';
-import AdminDashboard from './components/admin/AdminDashboard';
-import Companies from './components/admin/Companies';
-import CreateCompany from './components/admin/CompanyCreate';
-import CreateJobs from './components/admin/PostJob';
-import PostedJobs from './components/admin/AdminJobs';
-import Applicants from './components/admin/Applicants';
-import CompanySetup from './components/admin/CompanySetup';
-import AllApplicants from './components/admin/AllApplicants';
-import LandingPage from './components/LandingPage';
-import ProtectedRoute from './components/AuthGuard';
-import AdminJobs from './components/admin/AdminJobs';
-import AdminHome from './components/admin/AdminHome';
+import Home from './components/Home.jsx';
+import Jobs from './components/Jobs.jsx';
+import Profile from './components/Profile.jsx';
+import PostJob from './components/admin/PostJob.jsx';
+import Login from './components/auth/Login.jsx';
+import Signup from './components/auth/Signup.jsx';
+import Browse from './components/Browse.jsx';
+import JobDescription from './components/JobDescription.jsx';
+import AdminDashboard from './components/admin/AdminDashboard.jsx';
+import Companies from './components/admin/Companies.jsx';
+import CreateCompany from './components/admin/CompanyCreate.jsx';
+import CreateJobs from './components/admin/PostJob.jsx';
+import PostedJobs from './components/admin/AdminJobs.jsx';
+import Applicants from './components/admin/Applicants.jsx';
+import CompanySetup from './components/admin/CompanySetup.jsx';
+import AllApplicants from './components/admin/AllApplicants.jsx';
+import LandingPage from './components/LandingPage.jsx';
+import ProtectedRoute from './components/AuthGuard.jsx';
+import AdminJobs from './components/admin/AdminJobs.jsx';
+import AdminHome from './components/admin/AdminHome.jsx';
 
 function App() {
   return (

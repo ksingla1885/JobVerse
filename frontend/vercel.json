@@ -1,5 +1,8 @@
 {
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": "vite"
+  "framework": "vite",
+  "env": {
+    "VITE_API_BASE_URL": "https://job-verse-rho.vercel.app/api/v1"
+  }
 }
