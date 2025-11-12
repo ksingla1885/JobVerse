@@ -20,10 +20,12 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
-app.use(cors({
+const corsOptions = {
   origin: "http://localhost:5173", // <-- Correct
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 // app.use(cors(corsOptions));
 
@@ -40,8 +42,8 @@ app.use("/api/v1/application", applicationRoute);
 // http://localhost:8000/api/v1/user/profile/update
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     connectDB();
-    console.log(`Server running on ${PORT}`);
+    console.log(`Server running on ${PORT}`)
 })
