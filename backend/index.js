@@ -50,8 +50,8 @@ const __dirname = path.dirname(__filename);
 if (process.env.SERVE_FRONTEND === 'true' || process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, '../frontend/dist');
   app.use(express.static(distPath));
-  app.get('*', (req, res, next) => {
-    if (req.originalUrl.startsWith('/api')) return next();
+  // Fallback to index.html for SPA client-side routing (except for /api routes)
+  app.get(/^\/(?!api\/).*$/, (req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
   });
 }
