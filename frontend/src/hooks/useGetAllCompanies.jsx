@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
-import { COMPANY_API_END_POINT } from "@/utils/constant";
 import { setCompanies } from "@/redux/companySlice";
+import axiosInstance from "@/utils/axiosConfig";
+import { COMPANY_API_END_POINT } from "@/utils/constant";
 
 const useGetAllCompanies = () => {
   const dispatch = useDispatch();
@@ -11,21 +11,23 @@ const useGetAllCompanies = () => {
 
   useEffect(() => {
     const fetchCompanies = async () => {
+      setLoading(true);
       try {
-        const res = await axios.get(COMPANY_API_END_POINT, {
-          withCredentials: true,
-        });
-
+        const res = await axiosInstance.get('/company');
+        
         if (res.data.success) {
           dispatch(setCompanies(res.data.companies));
         } else {
           setError(res.data.message || "Failed to fetch companies");
         }
       } catch (err) {
+        console.error('Error fetching companies:', err);
         if (err.response?.status === 401) {
-          setError("Unauthorized: Please log in again.");
+          setError("Session expired. Please log in again.");
+          // Optionally redirect to login page
+          // navigate('/login');
         } else {
-          setError(err.message);
+          setError(err.response?.data?.message || "Failed to fetch companies. Please try again later.");
         }
       } finally {
         setLoading(false);

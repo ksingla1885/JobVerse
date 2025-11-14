@@ -39,30 +39,38 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            dispatch(setLoading(true));
-            const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                withCredentials: true
-            });
-            if (res.data.success) {
-                dispatch(setUser(res.data.user));
-                // Redirect based on user role
-                if (res.data.user.role === 'recruiter') {
-                    navigate("/admin");
-                } else if (res.data.user.role === 'student') {
-                    navigate("/home");
-                } else {
-                    navigate("/");
+            try {
+                dispatch(setLoading(true));
+                const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    withCredentials: true // This is important for sending/receiving cookies
+                });
+                
+                if (res.data.success) {
+                    // Save user data to Redux
+                    dispatch(setUser(res.data.user));
+                    
+                    // Redirect based on user role
+                    if (res.data.user.role === 'recruiter') {
+                        navigate("/admin");
+                    } else if (res.data.user.role === 'student') {
+                        navigate("/home");
+                    } else {
+                        navigate("/");
+                    }
+                    toast.success(res.data.message);
                 }
-                toast.success(res.data.message);
+            } catch (error) {
+                console.log(error);
+                toast.error(error.response.data.message);
+            } finally {
+                dispatch(setLoading(false));
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
-        } finally {
-            dispatch(setLoading(false));
+            toast.error("An unexpected error occurred");
         }
     }
 

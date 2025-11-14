@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setAllApplicants } from '@/redux/applicationSlice';
-import { APPLICATION_API_END_POINT } from '@/utils/constant';
+import axiosInstance from '@/utils/axiosConfig';
 
 const useGetAllApplicants = () => {
     const dispatch = useDispatch();
@@ -10,9 +9,7 @@ const useGetAllApplicants = () => {
     useEffect(() => {
         const fetchAllApplicants = async () => {
             try {
-                const res = await axios.get(`${APPLICATION_API_END_POINT}/getall`, {
-                    withCredentials: true,
-                });
+                const res = await axiosInstance.get('/application/getall');
 
                 if (res.data.success) {
                     dispatch(setAllApplicants(res.data.applications));

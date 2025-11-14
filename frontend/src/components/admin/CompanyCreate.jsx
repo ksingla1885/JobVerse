@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import axios from 'axios';
-import { COMPANY_API_END_POINT } from '@/utils/constant';
+import axiosInstance from '@/utils/axiosConfig';
 import { toast } from 'sonner';
 import { useDispatch } from 'react-redux';
 import { setSingleCompany } from '@/redux/companySlice';
@@ -26,12 +25,7 @@ const CompanyCreate = () => {
             return;
         }
         try {
-            const res = await axios.post(`${COMPANY_API_END_POINT}/register`, { companyName }, {
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                withCredentials: true
-            });
+            const res = await axiosInstance.post('/company/register', { companyName });
             if (res?.data?.success) {
                 dispatch(setSingleCompany(res.data.company));
                 toast.success(res.data.message);
